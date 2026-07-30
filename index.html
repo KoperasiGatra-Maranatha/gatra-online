@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koperasi Digital Pro</title>
+    <!-- JEMBATAN OTOMATIS GOOGLE SCRIPT RUN KE GITHUB (VERSI FINAL BEBAS CORS) -->
+  <script>
+  // ⚠️ Masukkan URL Web App Apps Script Anda di sini (yang berakhiran /exec)
+  const URL_APPS_SCRIPT_PRO = "https://script.google.com/macros/s/AKfycbx...AKSEN_URL_ASLI_ANDA.../exec"; 
+
+  window.google = window.google || {};
+  window.google.script = window.google.script || {};
+
+  // Polyfill Proxy untuk menggantikan google.script.run
+  window.google.script.run = (function() {
+    let successCallback = null;
+    let failureCallback = null;
+
+    const runner = {
+      withSuccessHandler: function(handler) {
+        successCallback = handler;
+        return runner;
+      },
+      withFailureHandler: function(handler) {
+        failureCallback = handler;
+        return runner;
+      }
+    };
+    return new Proxy(runner, {
+      get: function(target, prop) {
+        if (prop === 'withSuccessHandler') return target.withSuccessHandler;
+        if (prop === 'withFailureHandler') return target.withFailureHandler;
+
+        return function(...args) {
+          const payload = {
+            namaFungsi: prop,
+            parameter: args
+          };
+
+          fetch(URL_APPS_SCRIPT_PRO, {
+            method: "POST",
+            redirect: "follow",
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify(payload)
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (successCallback) successCallback(data);
+          })
+          .catch(err => {
+            console.error("Error Fetch Apps Script:", err);
+            if (failureCallback) failureCallback(err);
+          });
+        };
+      }
+    });
+  })();
+</script>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- HTML5 QR Code Scanner -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+  
+  <style>
+    body { 
+      background-color: #e8f5e9; 
+      font-size: 14px; 
+      margin: 0; 
+      padding: 0; 
+    }
+    .container { 
+      padding-left: 8px !important; 
+      padding-right: 8px !important; 
+    }
+    #katalog { 
+      display: flex; 
+      flex-wrap: wrap; 
+      margin-left: -4px !important; 
+      margin-right: -4px !important; 
+    }
+    .col-barang { 
+      padding-left: 4px !important; 
+      padding-right: 4px !important; 
+      margin-bottom: 8px !important;
+      box-sizing: border-box;
+    }
+    .card-barang { 
+      border-radius: 8px !important; 
+      border: 1px solid #e0e0e0 !important;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    .card-body { 
+      padding: 8px !important; 
+    }
+    .card-title {
+      font-size: 14px !important; 
+      font-weight: bold;
+      line-height: 1.2;
+      height: 34px; 
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 4px !important;
+    }
+    .card-text {
+      font-size: 15px !important; 
+      color: #dc3545 !important;
+      font-weight: bold;
+      margin-bottom: 2px !important;
+    }
+    .stok-text { 
+      font-size: 11px !important; 
+      color: #6c757d; 
+      margin-bottom: 6px; 
+    }
+    .card-barang .btn {
+      padding: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      border-radius: 6px;
+    }
+    
+    #keranjang .list-group-item { 
+      font-size: 15px !important; 
+      padding: 10px 12px; 
+    }
+    #keranjang b { 
+      font-size: 15px; 
+    }
+    .nav-tabs .nav-link { 
+      color: #555; 
+      font-weight: bold; 
+      font-size: 18px !important;
+      padding: 12px 14px !important; 
+    }
+    .nav-tabs .nav-link.active { 
+      color: #198754; 
+      font-weight: bold; 
+      border-bottom: 3px solid #198754 !important; 
+    }
+    #keranjang-menu-tab {
+      font-size: 22px !important;
+    }
+    #notifKeranjang {
+      font-size: 11px !important;
+      padding: 4px 7px !important;
+      top: 5px !important;
+    }
+    @media (max-width: 767px) {
+      .col-barang {
+        width: 33.33% !important; 
+        flex: 0 0 33.33% !important;
+        max-width: 33.33% !important;
+      }
+      .card-barang img { 
+        width: 100% !important;
+        height: 130px !important; 
+        object-fit: contain !important; 
+        background-color: #f8f9fa;
+      }
+      .nav-tabs .nav-link {
+        font-size: 14px !important; 
+        padding: 8px 10px !important; 
+        white-space: nowrap !important; 
+      }  
+      #menuTab {
+        display: flex !important;
+        justify-content: space-between !important; 
+        align-items: center !important;
+        width: 100% !important;
+      }
+    }
+    @media (min-width: 768px) {
+      .col-barang { 
+        width: 22% !important; 
+        flex: 0 0 22% !important; 
+        max-width: 22% !important; 
+      }
+      .card-barang img { 
+        width: 100% !important;
+        height: 260px !important; 
+        object-fit: contain !important;
+        background-color: #f8f9fa;
+      }
+    }
+    .dropdown-menu {
+      border-radius: 8px !important;
+      border: 1px solid #e0e0e0 !important;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    .dropdown-item {
+      font-size: 16px !important;
+      color: #555 !important;
+      font-weight: bold;
+      padding: 10px 16px !important;
+      background: none !important;
+      border: none !important;
+      width: 100%;
+      text-align: left;
+    }
+    .dropdown-item:hover {
+      background-color: #f8f9fa !important;
+      color: #198754 !important; 
+    }
+  </style>
+</head>
+<body>
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar navbar-dark bg-success mb-3 shadow-sm">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+        <img src="https://drive.google.com/thumbnail?sz=w100&id=10t-4qtU71Du0LPMbE2Eh22Vbi4Xw4QY3" 
+             alt="Logo" 
+             style="height: 32px; width: auto; margin-right: 8px; border-radius: 4px;"
+             onerror="this.src='https://via.placeholder.com/32?text=💼'">
+        <span>Koperasi GATRA MARANATHA</span>
+      </a>
+      <div id="badgeUserLogin" class="badge bg-light text-success fw-bold py-2 cursor-pointer" onclick="bukaModalLogin()">
+        🔑 Login Anggota
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== MAIN CONTAINER ==================== -->
+  <div class="container">
+    
+    <!-- Nav Tabs -->
+    <ul class="nav nav-tabs mb-4 border-bottom-0" id="menuTab" role="tablist">
+      
+      <!-- 1. TOMBOL DROPDOWN UTAMA -->
+      <li class="nav-item dropdown">
+        <button class="nav-link dropdown-toggle" id="dropdownMenuUtama" data-bs-toggle="dropdown" type="button" aria-expanded="false">
+          ☰ Fitur Menu
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <button class="dropdown-item" id="belanja-tab" data-bs-toggle="tab" data-bs-target="#tab-belanja" type="button">Menu Belanja</button>
+          </li>
+          <li>
+            <button class="dropdown-item" id="retur-tab" data-bs-toggle="tab" data-bs-target="#retur" type="button" onclick="bukaMenuRetur()">🔄 Retur</button>
+          </li>
+          <li>
+            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalRegistrasi">🔑 Registrasi PIN Anggota</a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <button class="dropdown-item" id="laporan-tab" data-bs-toggle="tab" data-bs-target="#tab-laporan" type="button" onclick="bukaLaporan()">Laporan Pengurus</button>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item text-danger" href="#" onclick="eksekusiLogout()">🚪 Logout / Ganti Akun</a>
+          </li>
+        </ul>
+      </li>
+
+      <!-- 2. TOMBOL KERANJANG -->
+      <li class="nav-item position-relative">
+        <button class="nav-link" id="keranjang-menu-tab" data-bs-toggle="tab" data-bs-target="#tab-keranjang" type="button">
+          🛒 <span id="notifKeranjang" class="badge bg-danger position-absolute top-0 start-50 translate-middle rounded-pill d-none" style="font-size: 10px; padding: 3px 6px;">0</span>
+        </button>
+      </li>
+
+      <!-- 3. TOMBOL PENGURUS -->
+      <li class="nav-item">
+        <button class="nav-link" id="pengurus-tab" data-bs-toggle="tab" data-bs-target="#tab-pengurus" type="button" onclick="bukaMenuPengurus()">👥 Pengurus</button>
+      </li>
+
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      
+      <!-- ==================== TAB BELANJA ==================== -->
+      <div class="tab-pane fade show active" id="tab-belanja">
+        <h4 class="mb-3 text-dark fw-bold">Katalog Barang</h4>
+        
+        <!-- Barcode Scanner Input -->
+        <div class="card p-3 mb-3 border-0 shadow-sm rounded-3" style="display: none;">
+          <div class="input-group">
+            <input type="text" id="barcodeInput" class="form-control" placeholder="Ketik kode barang...">
+            <button class="btn btn-primary" onclick="scanBarangManual()">Cari</button>
+            <button class="btn btn-warning fw-bold" id="btnKamera" onclick="toggleKameraHP()">📷 Scan Kamera HP</button>
+          </div>
+          <div id="reader" class="mt-3 p-2 border"></div>
+        </div>
+
+        <!-- Katalog Barang -->
+        <div class="row" id="katalog">
+          <div class="col-12 text-center text-muted">Memuat daftar barang...</div>
+        </div>
+      </div>
+
+      <!-- ==================== TAB KERANJANG ==================== -->
+      <div class="tab-pane fade" id="tab-keranjang">
+        <div class="card p-3 shadow-sm border-0 rounded-3">
+          <h4 class="border-bottom pb-2 fw-bold text-dark">Keranjang Belanja</h4>
+          
+          <ul class="list-group mb-3" id="keranjang">
+            <li class="list-group-item text-center text-muted small">Keranjang masih kosong</li>
+          </ul>
+      
+          <!-- Input NIK -->
+          <div class="mb-3">
+            <label class="form-label font-weight-bold">NIK Pembeli</label>
+            <input type="text" id="nikPembeli" class="form-control form-control-lg" placeholder="Masukkan NIK Anda..." oninput="pemicuCekAnggota()" autocomplete="off" value="">
+            <small id="namaAnggota" class="form-text d-block mt-1 font-weight-bold" style="font-size: 14px;"></small>
+          </div>
+
+          <!-- Kolom PIN Transaksi -->
+          <div id="box-pin" class="mb-3 d-none">
+            <label class="form-label font-weight-bold text-danger">⚠️ Masukkan PIN Transaksi (Rahasia)</label>
+            <input type="password" id="pinPembeli" class="form-control form-control-lg" placeholder="Masukkan PIN 4-6 Digit..." maxlength="6" inputmode="numeric" autocomplete="new-password">
+          </div>
+
+          <!-- Nota Sukses -->
+          <div id="areaNotaSukses" class="mb-3 d-none">
+            <div class="alert alert-success text-center p-2 mb-0">
+              <h6 class="small fw-bold mb-2">Transaksi Terakhir Sukses!</h6>
+              <button id="linkDownloadPdf" class="btn btn-sm btn-danger w-100 fw-bold">📲 Kirim Struk via WhatsApp</button>
+            </div>
+          </div>
+          
+          <button class="btn btn-success w-100 py-2 fw-bold" onclick="checkout()">Selesaikan Pembayaran</button>
+        </div>
+      </div>
+
+      <!-- ==================== TAB RETUR ==================== -->
+      <div class="tab-pane fade" id="retur">
+        <div class="p-3">
+          <h4 class="fw-bold mb-3">🔄 Form Retur Barang</h4>
+          
+          <!-- Proteksi PIN -->
+          <div id="boxProteksiRetur" class="card p-3 mb-3 shadow-sm">
+            <label class="form-label fw-bold small text-muted">Masukkan PIN Pengurus untuk Mengakses Menu Retur:</label>
+            <div class="input-group">
+              <input type="password" id="pinReturInput" class="form-control form-control-sm" placeholder="PIN Pengurus">
+              <button class="btn btn-sm btn-dark fw-bold" onclick="verifikasiRetur()">Masuk</button>
+            </div>
+          </div>
+
+          <!-- Konten Retur -->
+          <div id="kontenReturAsli" class="card p-3 shadow-sm d-none">
+            <div class="mb-3">
+              <label class="form-label fw-bold small">Kode Barang / Barcode:</label>
+              <div class="input-group">
+                <input type="text" id="returKodeBarang" class="form-control" placeholder="Scan atau ketik kode">
+                <button class="btn btn-outline-secondary" onclick="toggleKameraRetur()">📷 Scan</button>
+              </div>
+              <div id="readerRetur" style="width: 100%; max-width: 350px; margin: 10px auto; display: none;"></div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold small">Jumlah (Qty) Retur:</label>
+              <input type="number" id="returQty" class="form-control" value="1" min="1">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold small">Jenis Arah Retur:</label>
+              <select id="returJenis" class="form-select">
+                <option value="Masuk">Masuk (Retur dari Pembeli -> Stok Bertambah)</option>
+                <option value="Keluar">Keluar (Retur ke Supplier -> Stok Berkurang)</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold small">Alasan / Keterangan Retur:</label>
+              <textarea id="returAlasan" class="form-control" rows="2" placeholder="Contoh: Barang kedaluwarsa / Rusak fisik"></textarea>
+            </div>
+
+            <button class="btn btn-danger w-100 fw-bold py-2" onclick="simpanReturKeSistem()">💾 Proses & Simpan Retur</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== TAB LAPORAN ==================== -->
+      <div class="tab-pane fade" id="tab-laporan">
+        <!-- Proteksi PIN -->
+        <div class="card p-4 border-0 shadow-sm rounded-3" id="boxProteksiLaporan">
+          <h5 class="text-danger fw-bold mb-3">🔒 Verifikasi Pengurus</h5>
+          <p class="text-muted small">Masukkan PIN Pengurus untuk dapat melihat data keuangan koperasi.</p>
+          <div class="input-group" style="max-width: 300px;">
+            <input type="password" id="pinPengurusInput" class="form-control" placeholder="Masukkan PIN Anda...">
+            <button class="btn btn-danger" onclick="verifikasiLaporan()">Buka Data</button>
+          </div>
+        </div>
+
+        <!-- Konten Laporan -->
+        <div class="row d-none" id="kontenLaporanAsli">
+          <div class="col-md-4 mb-3">
+            <div class="card bg-success text-white p-4 border-0 shadow-sm rounded-3">
+              <h6>Total Pendapatan Koperasi</h6>
+              <h2 class="fw-bold" id="lapPendapatan">Rp 0</h2>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="card bg-primary text-white p-4 border-0 shadow-sm rounded-3">
+              <h6>Jumlah Transaksi (Nota)</h6>
+              <h2 class="fw-bold" id="lapTransaksi">0 Transaksi</h2>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="card bg-info text-white p-4 border-0 shadow-sm rounded-3">
+              <h6>Total Produk Terjual</h6>
+              <h2 class="fw-bold" id="lapItemTerjual">0 Pcs</h2>
+            </div>
+          </div>
+
+          <!-- Stok Opname & Tambah Barang -->
+          <div class="col-12 mt-3">
+            <div class="card p-4 border-warning shadow-sm rounded-3">
+              <h5 class="fw-bold text-dark">📦 Menu Khusus: Tambah Stock Opname / Produk Baru</h5>
+              <p class="small text-muted mb-3">Pilih aksi untuk memperbarui stok barang eksis atau menambah produk baru ke dalam sistem.</p>
+              
+              <div class="mb-3">
+                <label class="form-label fw-bold small">Pilih Aksi:</label>
+                <select id="pilihanAksiOpname" class="form-select fw-bold text-primary" onchange="toggleModeOpname()">
+                  <option value="opname">🔄 Update Stok Barang Eksis (Stock Opname)</option>
+                  <option value="baru">➕ Tambah Produk / Barang Baru ke Katalog</option>
+                </select>
+              </div>
+
+              <div class="row g-2">
+                <div class="col-md-6 mb-2">
+                  <label class="form-label small fw-bold">Kode / Barcode Barang*</label>
+                  <input type="text" id="opnameKodeBarang" class="form-control" placeholder="Contoh: BRG001 / 899123456">
+                </div>
+
+                <div class="col-md-6 mb-2">
+                  <label class="form-label small fw-bold" id="labelStok">Jumlah Stok Fisik Tambahan*</label>
+                  <input type="number" id="opnameStokBarang" class="form-control" placeholder="Contoh: 50">
+                </div>
+
+                <div id="fieldProdukBaru" class="row g-2 m-0 p-0 d-none">
+                  <div class="col-md-6 mb-2">
+                    <label class="form-label small fw-bold">Nama Barang Baru*</label>
+                    <input type="text" id="opnameNamaBarang" class="form-control" placeholder="Contoh: Kopi Kapal Api 165g">
+                  </div>
+                  <div class="col-md-3 mb-2">
+                    <label class="form-label small fw-bold">Harga Jual (Rp)*</label>
+                    <input type="number" id="opnameHargaBarang" class="form-control" placeholder="Contoh: 15000">
+                  </div>
+                  <div class="col-md-3 mb-2">
+                    <label class="form-label small fw-bold">Kategori</label>
+                    <input type="text" id="opnameKategoriBarang" class="form-control" placeholder="Contoh: Makanan">
+                  </div>
+                </div>
+
+                <div class="col-12 mb-3 mt-2">
+                  <label class="form-label fw-bold small">Foto Gambar / Barcode Produk (Upload Device):</label>
+                  <input type="file" id="fileGambarOpname" class="form-control" accept="image/*" onchange="prosesPreviewGambar(event)">
+                </div>
+              </div>
+
+              <div id="previewGambarContainer" class="text-center d-none mb-3">
+                <p class="small text-muted mb-1">Preview Gambar:</p>
+                <img id="previewGambarOpname" src="" alt="Preview" class="img-fluid rounded border" style="max-height: 200px;">
+              </div>
+
+              <button id="btnProsesOpname" class="btn btn-warning w-100 fw-bold mt-2" onclick="prosesSimpanOpnameAtauBarang()">
+                📤 Process Stock Opname via Gambar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- ==================== TAB PENGURUS ==================== -->
+      <div class="tab-pane fade" id="tab-pengurus">
+        <div class="card p-2 shadow-sm border-0 rounded-3 mt-0">
+          <h4 class="fw-bold text-dark mb-1 mt-0">👥 Struktur Pengurus Koperasi</h4>
+          <p class="text-muted small mb-2">Daftar pengurus aktif Koperasi GATRA MARANATHA saat ini.</p>
+          <div class="list-group" id="containerDaftarPengurus">
+            <div class="text-center text-muted p-2">Memuat data pengurus...</div>
+          </div>
+        </div>
+      </div>
+      
+    </div> <!-- End Tab Content -->
+  </div> <!-- End Container -->
+
+  <!-- ==================== MODAL LOGIN ANGGOTA ==================== -->
+  <div class="modal fade" id="modalLogin" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title fw-bold">🔑 Login Anggota Koperasi</h5>
+        </div>
+        <div class="modal-body p-4">
+          <form id="formLogin" onsubmit="event.preventDefault(); eksekusiLogin();">
+            <div class="mb-3">
+              <label class="form-label fw-bold">NIK Anggota</label>
+              <input type="text" id="loginNik" class="form-control form-control-lg" placeholder="Masukkan NIK Anda" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">PIN Rahasia</label>
+              <input type="password" id="loginPin" class="form-control form-control-lg" placeholder="Masukkan PIN 4-6 angka" maxlength="6" inputmode="numeric" required>
+            </div>
+            <button type="submit" id="btnProsesLogin" class="btn btn-success w-100 py-2 fw-bold mb-3">Masuk ke Aplikasi</button>
+          </form>
+          <hr>
+          <div class="text-center">
+            <span class="small text-muted">Belum memiliki PIN?</span> 
+            <a href="javascript:void(0)" class="small fw-bold text-success text-decoration-none" onclick="pindahKeRegistrasi(event)">Buat PIN Baru</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL REGISTRASI ANGGOTA ==================== -->
+<div class="modal fade" id="modalRegistrasi" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title fw-bold">Registrasi PIN & No HP Anggota</h5>
+        <!-- Tombol X dengan penanganan pembatalan -->
+        <button type="button" class="btn-close btn-close-white" onclick="batalRegistrasi()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form id="formRegistrasi" onsubmit="event.preventDefault(); eksekusiRegistrasi();">
+          <div class="mb-3">
+            <label class="form-label fw-bold">NIK Anggota</label>
+            <input type="text" id="regNik" class="form-control" placeholder="Masukkan NIK Koperasi Anda" required>
+          </div>
+          <!-- Field Tambahan: Nama Lengkap -->
+          <div class="mb-3">
+            <label class="form-label fw-bold">Nama Lengkap</label>
+            <input type="text" id="regNama" class="form-control" placeholder="Masukkan Nama Lengkap Anda" required>
+          </div>
+          <!-- Field Tambahan: Bagian / Divisi -->
+          <div class="mb-3">
+            <label class="form-label fw-bold">Bagian / Divisi / Unit Kerja</label>
+            <input type="text" id="regBagian" class="form-control" placeholder="Contoh: Produksi / Gudang / HRD" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Nomor WhatsApp (Aktif)</label>
+            <input type="number" id="regNoHp" class="form-control" placeholder="Contoh: 08123456789" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Buat PIN Transaksi Baru (6 Angka)</label>
+            <input type="password" id="regPin" class="form-control" maxlength="6" inputmode="numeric" placeholder="Masukkan 6 angka PIN rahasia" required>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-light w-50 fw-bold" onclick="batalRegistrasi()">Batal</button>
+            <button type="submit" class="btn btn-success w-50 fw-bold" id="btnProsesReg">Daftar & Buat PIN</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- ==================== MODAL SUKSES ==================== -->
+  <div class="modal fade" id="modalSuksesCustom" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 12px;">
+        <div class="modal-body text-center p-4">
+          <div class="text-success mb-3" style="font-size: 40px;">🎉</div>
+          <h6 class="fw-bold text-dark mb-3" style="font-size: 16px;">"Terima kasih, transaksi berhasil"</h6>
+          <button type="button" class="btn btn-success w-100 fw-bold py-2" data-bs-dismiss="modal" style="border-radius: 8px;">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- ==================== MODAL KONFIRMASI LOGOUT ==================== -->
+  <div class="modal fade" id="modalLogoutConfirm" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content border-0 shadow" style="border-radius: 12px;">
+        <div class="modal-body text-center p-4">
+          <h5 class="fw-bold mb-3">🚪 Konfirmasi Logout</h5>
+          <p class="text-muted small mb-4">Apakah Anda yakin ingin logout / mengganti akun?</p>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-light w-50 fw-bold" data-bs-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-danger w-50 fw-bold" onclick="prosesLogoutFinal()">Ya, Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // ==================== VARIABLES GLOBAL ====================
+    let semuaBarang = [];
+    let keranjang = [];
+    let noHpPembeliAktif = "";
+    let namaPembeliTervalidasi = "Umum/Non-Anggota";
+    let html5QrcodeScanner = null;
+    let html5QrcodeScannerRetur = null;
+    let dataGambarBase64 = "";
+    let userLoginAktif = null; // Menyimpan data sesi login
+
+    // ==================== INIT ====================
+    document.addEventListener("DOMContentLoaded", function() {
+      muatDaftarBarang();
+      
+      // Cek apakah ada data login tersimpan di LocalStorage browser
+      let savedUser = localStorage.getItem("gatra_user_session");
+      if (savedUser) {
+        userLoginAktif = JSON.parse(savedUser);
+        terapkanSesiUser();
+      } else {
+        bukaModalLogin();
+      }
+    });
+
+    // ==================== LOGIN & SESI USER ====================
+    function bukaModalLogin() {
+      var modalLogin = new bootstrap.Modal(document.getElementById('modalLogin'));
+      modalLogin.show();
+    }
+
+    function eksekusiLogin() {
+      let nik = document.getElementById('loginNik').value.trim();
+      let pin = document.getElementById('loginPin').value.trim();
+      let btn = document.getElementById('btnProsesLogin');
+
+      if (!nik || !pin) {
+        alert("NIK dan PIN wajib diisi!");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = "Memverifikasi...";
+
+      google.script.run
+        .withSuccessHandler(function(response) {
+          btn.disabled = false;
+          btn.innerText = "Masuk ke Aplikasi";
+
+          if (response.success) {
+            userLoginAktif = response.user;
+            // Simpan sesi login di memori browser
+            localStorage.setItem("gatra_user_session", JSON.stringify(userLoginAktif));
+            
+            // Tutup modal login
+            var modalEl = document.getElementById('modalLogin');
+            var modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+
+            terapkanSesiUser();
+            alert("🎉 " + response.message + "\nSelamat datang, " + response.user.nama);
+          } else {
+            alert("❌ " + response.message);
+          }
+        })
+        .withFailureHandler(function(err) {
+          btn.disabled = false;
+          btn.innerText = "Masuk ke Aplikasi";
+          alert("Error Sistem Login: " + err.message);
+        })
+        .prosesLoginAnggota(nik, pin);
+    }
+
+    function terapkanSesiUser() {
+      if (userLoginAktif) {
+        // Tampilkan info akun di Navbar
+        document.getElementById('badgeUserLogin').innerHTML = "👤 " + userLoginAktif.nama;
+        document.getElementById('badgeUserLogin').className = "badge bg-warning text-dark fw-bold py-2";
+
+        // Isikan otomatis ke kolom NIK Kasir / Keranjang
+        let inputNikKasir = document.getElementById('nikPembeli');
+        if (inputNikKasir) {
+          inputNikKasir.value = userLoginAktif.nik;
+          cekAnggota(); // Jalankan verifikasi otomatis NIK
+        }
+      }
+    }
+
+   function eksekusiLogout() {
+  localStorage.removeItem("gatra_user_session");
+  userLoginAktif = null;
+  
+  // Reset tampilan
+  document.getElementById('badgeUserLogin').innerHTML = "🔑 Login Anggota";
+  document.getElementById('badgeUserLogin').className = "badge bg-light text-success fw-bold py-2";
+  
+  document.getElementById('nikPembeli').value = "";
+  document.getElementById('namaAnggota').innerText = "";
+  document.getElementById('box-pin').classList.add('d-none');
+  
+  bukaModalLogin();
+}
+
+    function pindahKeRegistrasi(event) {
+  // Cegah link me-refresh halaman/aplikasi
+  if (event) event.preventDefault();
+
+  // Tutup Modal Login
+  var modalLoginEl = document.getElementById('modalLogin');
+  var modalLogin = bootstrap.Modal.getInstance(modalLoginEl);
+  if (modalLogin) {
+    modalLogin.hide();
+  }
+
+  // Buka Modal Registrasi
+  var modalRegEl = document.getElementById('modalRegistrasi');
+  var modalReg = bootstrap.Modal.getInstance(modalRegEl) || new bootstrap.Modal(modalRegEl);
+  modalReg.show();
+}
+    // ==================== KATALOG FUNCTIONS ====================
+   function muatDaftarBarang() {
+  // Jalur khusus mengambil data barang secara transparan dari luar Google Sites
+  const urlAmbilData = "https://google.com";
+
+  fetch(urlAmbilData)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Gagal merespon data dari server Google Sheets.");
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Menyimpan data ke variabel global Anda agar fitur pencarian/fitur lain tetap berfungsi
+      semuaBarang = data; 
+      // Otomatis merender tampilan kartu-kartu barang koperasi Anda
+      tampilkanKatalog(data); 
+    })
+    .catch(err => { 
+      document.getElementById('katalog').innerHTML = `<div class="alert alert-danger">${err.message}</div>`; 
+    });
+}
+
+
+    function tampilkanKatalog(barang) {
+      let html = '';
+      if (!barang || barang.length === 0) {
+        document.getElementById('katalog').innerHTML = '<p class="text-muted text-center w-100 p-3">Tidak ada barang.</p>';
+        return;
+      }
+      
+      barang.forEach(item => {
+        let rawGambar = item.gambar ? item.gambar.toString() : "";
+        let fileId = "";
+        let match = rawGambar.match(/[-\w]{25,}/);
+
+        if (match && match[0]) {
+          fileId = match[0];
+        }
+
+        let linkGambar = fileId 
+          ? "https://drive.google.com/thumbnail?sz=w300&id=" + fileId + "&t=" + new Date().getTime()
+          : "https://via.placeholder.com/200?text=No+Image";
+
+        html += `
+          <div class="mb-2 px-1 col-barang">
+            <div class="card card-barang h-100 shadow-sm border-0">
+              <img src="${linkGambar}" class="card-img-top rounded-3" style="object-fit: cover; height: 110px; width: 100% !important;" onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
+              <div class="card-body p-2 d-flex flex-column justify-content-between">
+                <div>
+                  <h6 class="card-title text-dark fw-bold mb-1" style="font-size: 0.85rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.nama}</h6>
+                  <p class="card-text text-success fw-semibold mb-1" style="font-size: 0.8rem;">Rp ${Number(item.harga).toLocaleString('id-ID')}</p>
+                  <small class="stok-text d-block text-muted mb-2" style="font-size: 0.75rem;">Stok: ${item.stok}</small>
+                </div>
+                <button class="btn btn-sm btn-success w-100 py-1 fw-bold" style="font-size: 0.75rem;" onclick="tambahKeKeranjang('${item.kode}')">➕ Tambah</button>
+              </div>
+            </div>
+          </div>`;
+      });
+      document.getElementById('katalog').innerHTML = html;
+    }
+
+    // ==================== ANGGOTA FUNCTIONS ====================
+    let penundaPencarian;
+
+    function pemicuCekAnggota() {
+      clearTimeout(penundaPencarian); 
+      let nik = document.getElementById('nikPembeli').value;
+      if (!nik) {
+        document.getElementById('namaAnggota').innerText = "";
+        document.getElementById('box-pin').classList.add('d-none');
+        return;
+      }
+
+      penundaPencarian = setTimeout(function() {
+        cekAnggota();
+      }, 500); 
+    }
+
+    function cekAnggota() {
+      let nik = document.getElementById('nikPembeli').value;
+      if (!nik) return;
+
+      if (nik.length < 4) { 
+        document.getElementById('namaAnggota').innerText = "⚠️ NIK belum lengkap";
+        document.getElementById('box-pin').classList.add('d-none');
+        return;
+      }
+
+      document.getElementById('namaAnggota').innerText = "Memeriksa NIK...";
+      
+      google.script.run
+        .withSuccessHandler(function(response) {
+          if (response.status) {
+            document.getElementById('namaAnggota').innerText = "🟢 " + response.nama;
+            noHpPembeliAktif = response.noHp;
+            namaPembeliTervalidasi = response.nama;
+            
+            document.getElementById('box-pin').classList.remove('d-none');
+            document.getElementById('pinPembeli').value = ""; 
+          } else {
+            document.getElementById('namaAnggota').innerText = "🔴 " + response.pesan;
+            noHpPembeliAktif = "";
+            document.getElementById('box-pin').classList.add('d-none');
+          }
+        })
+        .withFailureHandler(err => {
+          alert("Gagal koneksi ke server: " + err.message);
+          document.getElementById('box-pin').classList.add('d-none');
+        })
+        .validasiAnggota(nik);
+    }
+
+    // ==================== KERANJANG FUNCTIONS ====================
+    function tambahKeKeranjang(kode) {
+      let barang = semuaBarang.find(b => b.kode == kode);
+      if (barang && barang.stok > 0) {
+        let item = keranjang.find(k => k.kode == kode);
+        if (item) {
+          item.qty++;
+        } else {
+          keranjang.push({
+            kode: barang.kode,
+            nama: barang.nama,
+            harga: barang.harga,
+            qty: 1
+          });
+        }
+        updateKeranjangUI();
+      } else {
+        alert("Stok habis!");
+      }
+    }
+
+    function updateKeranjangUI() {
+      let html = '';
+      let total = 0;
+      let totalItem = 0;
+
+      if (keranjang.length === 0) {
+        document.getElementById('keranjang').innerHTML = '<li class="list-group-item text-center text-muted small">Keranjang masih kosong</li>';
+        document.getElementById('notifKeranjang').classList.add('d-none');
+        return;
+      }
+
+      keranjang.forEach((item, index) => {
+        let subtotal = item.harga * item.qty;
+        total += subtotal;
+        totalItem += item.qty;
+
+        html += `
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <b class="d-block">${item.nama}</b>
+              <small class="text-muted">Rp ${item.harga.toLocaleString('id-ID')} x ${item.qty}</small>
+            </div>
+            <div class="d-flex align-items-center">
+              <span class="badge bg-success me-2">Rp ${subtotal.toLocaleString('id-ID')}</span>
+              <button class="btn btn-sm btn-light me-1" onclick="kurangiKeranjang(${index})">➖</button>
+              <button class="btn btn-sm btn-light" onclick="tambahKeranjangLagi(${index})">➕</button>
+            </div>
+          </li>`;
+      });
+
+      document.getElementById('keranjang').innerHTML = html;
+      
+      let infoNotif = document.getElementById('notifKeranjang');
+      if (totalItem > 0) {
+        infoNotif.innerText = totalItem;
+        infoNotif.classList.remove('d-none');
+      } else {
+        infoNotif.classList.add('d-none');
+      }
+    }
+
+    function tambahKeranjangLagi(idx) {
+      let barangAsli = semuaBarang.find(b => b.kode == keranjang[idx].kode);
+      if (barangAsli && barangAsli.stok > keranjang[idx].qty) {
+        keranjang[idx].qty++;
+        updateKeranjangUI();
+      } else {
+        alert("Stok barang di toko tidak mencukupi!");
+      }
+    }
+
+    function kurangiKeranjang(idx) {
+      if (keranjang[idx].qty > 1) {
+        keranjang[idx].qty--;
+      } else {
+        keranjang.splice(idx, 1);
+      }
+      updateKeranjangUI();
+    }
+
+    // ==================== BARCODE SCANNER FUNCTIONS ====================
+    function scanBarangManual() {
+      let kode = document.getElementById('barcodeInput').value.toString().trim();
+      if (kode) {
+        let produk = semuaBarang.find(item => 
+          (item.barcode && item.barcode.toString().trim() === kode) || 
+          (item.kode && item.kode.toString().trim() === kode)
+        );
+        
+        if (produk) {
+          tambahKeKeranjang(produk.kode);
+        } else {
+          tambahKeKeranjang(kode);
+        }
+        document.getElementById('barcodeInput').value = '';
+      }
+    }
+
+    function toggleKameraHP() {
+      let areaCam = document.getElementById('reader');
+      if (!areaCam) return;
+      
+      if (areaCam.style.display === 'block') {
+        areaCam.style.display = 'none';
+        if (html5QrcodeScanner) html5QrcodeScanner.clear().catch(err => console.log(err));
+      } else {
+        areaCam.style.display = 'block';
+        
+        html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
+          fps: 10, 
+          qrbox: 250,
+          supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
+        });
+        
+        html5QrcodeScanner.render((decodedText) => {
+          let kodeScan = decodedText.toString().trim();
+          
+          let produk = semuaBarang.find(item => 
+            (item.barcode && item.barcode.toString().trim() === kodeScan) || 
+            (item.kode && item.kode.toString().trim() === kodeScan)
+          );
+
+          if (produk) {
+            if (Number(produk.stok) <= 0) {
+              alert("⚠️ Maaf, Stok untuk barang '" + produk.nama + "' sudah habis!");
+            } else {
+              tambahKeKeranjang(produk.kode);
+              alert("🎉 Sukses: " + produk.nama + " berhasil masuk keranjang!");
+            }
+          } else {
+            alert("❌ Gagal: Barcode '" + kodeScan + "' belum terdaftar!");
+          }
+          
+          if (html5QrcodeScanner) {
+            html5QrcodeScanner.clear().catch(err => console.log(err));
+          }
+          areaCam.style.display = 'none';
+        });
+      }
+    }
+
+    // ==================== CHECKOUT FUNCTIONS ====================
+    function checkout() {
+      if (keranjang.length === 0) {
+        alert("Keranjang masih kosong!");
+        return;
+      }
+      
+      let nikInputElement = document.getElementById('nikPembeli');
+      let nik = nikInputElement.value;
+      if (!nik) {
+        alert("Silakan masukkan NIK Pembeli terlebih dahulu!");
+        return;
+      }
+
+      let pinInputElement = document.getElementById('pinPembeli');
+      let pin = pinInputElement.value;
+      if (!pin) {
+        alert("❌ Transaksi Ditolak: Anda wajib memasukkan PIN Transaksi!");
+        return;
+      }
+
+      let elemenNama = document.getElementById('namaAnggota').innerText;
+      
+      if (!elemenNama || elemenNama.includes("🔴") || elemenNama.includes("Memeriksa") || elemenNama.trim() === "") {
+        alert("❌ Transaksi Ditolak: Hanya Anggota terdaftar yang boleh bertransaksi!\nSistem akan mengosongkan kembali keranjang belanja.");
+        
+        nikInputElement.value = "";
+        pinInputElement.value = "";
+        document.getElementById('namaAnggota').innerText = "";
+        document.getElementById('box-pin').classList.add('d-none');
+        keranjang = [];
+        updateKeranjangUI();
+        
+        return;
+      }
+
+      prosesSimpanTransaksiKeSheets(nik, "Umum"); 
+    }
+
+    function prosesSimpanTransaksiKeSheets(nik, namaPengurusAktif) {
+      let elemenNama = document.getElementById('namaAnggota').innerText;
+      let namaAsliPembeli = "Pelanggan";
+      
+      if (elemenNama && !elemenNama.includes("🔴") && !elemenNama.includes("Memeriksa")) {
+        namaAsliPembeli = elemenNama.replace("🟢", "").replace("🔴", "").trim();
+      }
+
+      let pinInputElement = document.getElementById('pinPembeli');
+      let pinInputan = pinInputElement ? pinInputElement.value : "";
+
+      let total = 0;
+      let teksDaftarBarang = "";
+      keranjang.forEach(item => { 
+        total += (item.harga * item.qty);
+        teksDaftarBarang += `- ${item.nama} (${item.qty}x) = Rp ${(item.harga * item.qty).toLocaleString('id-ID')}\n`;
+      });
+
+      let dataTransaksi = {
+        nik: nik,
+        pin: pinInputan, 
+        nama: namaAsliPembeli,
+        total: total,
+        keranjang: keranjang,
+        pengurus: namaPengurusAktif
+      };
+
+      document.getElementById('namaAnggota').innerText = "Memproses Transaksi...";
+      document.getElementById('areaNotaSukses').classList.add('d-none');
+
+      google.script.run
+        .withSuccessHandler(function(response) {
+          if (response.success) {
+            var myModal = new bootstrap.Modal(document.getElementById('modalSuksesCustom'));
+            myModal.show();
+            
+            document.getElementById('areaNotaSukses').classList.remove('d-none');
+            
+            let nomorTujuan = noHpPembeliAktif ? noHpPembeliAktif : "628XXXXXXXXXX";
+            if (nomorTujuan.startsWith("0")) nomorTujuan = "62" + nomorTujuan.slice(1);
+            nomorTujuan = nomorTujuan.replace(/[- ]/g, '');
+
+            let pesanFormat = `*KOPERASI GATRA MARANATHA*\n=========================\n*No Nota:* ${response.noNota}\n*Pembeli:* ${namaAsliPembeli}\n=========================\n${teksDaftarBarang}=========================\n*Total Bayar:* Rp ${total.toLocaleString('id-ID')}\n\nTerima kasih atas kunjungan Anda!`;
+            let urlWhatsApp = "https://wa.me/" + nomorTujuan + "?text=" + encodeURIComponent(pesanFormat);
+            
+            let tombolMerah = document.getElementById('linkDownloadPdf');
+            if (tombolMerah) tombolMerah.setAttribute("onclick", `window.open('${urlWhatsApp}', '_blank')`);
+
+            // Reset Keranjang & Form
+            keranjang = [];
+            updateKeranjangUI();
+            if (pinInputElement) pinInputElement.value = '';
+            
+            // Jaga NIK tetap ada jika user ter-login
+            if (userLoginAktif) {
+              document.getElementById('nikPembeli').value = userLoginAktif.nik;
+              cekAnggota();
+            } else {
+              document.getElementById('nikPembeli').value = '';
+              document.getElementById('box-pin').classList.add('d-none');
+              document.getElementById('namaAnggota').innerText = '';
+            }
+
+            muatDaftarBarang(); 
+          } else {
+            alert(response.message);
+            document.getElementById('namaAnggota').innerText = "🟢 " + namaAsliPembeli; 
+          }
+        })
+        .withFailureHandler(err => {
+          alert("Gagal memproses pengiriman nota: " + err.message);
+          document.getElementById('namaAnggota').innerText = "🟢 " + namaAsliPembeli;
+        })
+        .simpanNotaKeSpreadsheet(dataTransaksi); 
+    }
+
+    // ==================== LAPORAN FUNCTIONS ====================
+    function bukaLaporan() {
+      document.getElementById('boxProteksiLaporan').classList.remove('d-none');
+      document.getElementById('kontenLaporanAsli').classList.add('d-none');
+      document.getElementById('pinPengurusInput').value = '';
+    }
+
+    function verifikasiLaporan() {
+      let pin = document.getElementById('pinPengurusInput').value;
+      if (!pin) {
+        alert("PIN tidak boleh kosong!");
+        return;
+      }
+
+      google.script.run
+        .withSuccessHandler(function(hasilValidasi) {
+          if (hasilValidasi.success) {
+            document.getElementById('boxProteksiLaporan').classList.add('d-none');
+            document.getElementById('kontenLaporanAsli').classList.remove('d-none');
+            
+            google.script.run
+              .withSuccessHandler(data => {
+                document.getElementById('lapPendapatan').innerText = "Rp " + data.totalPendapatan.toLocaleString('id-ID');
+                document.getElementById('lapTransaksi').innerText = data.totalTransaksi + " Transaksi";
+                document.getElementById('lapItemTerjual').innerText = data.totalItemTerjual + " Pcs";
+              })
+              .getLaporanKoperasi();
+            
+          } else {
+            alert(hasilValidasi.message);
+          }
+        })
+        .withFailureHandler(err => { 
+          alert("Gagal koneksi: " + err.message); 
+        })
+        .validasiPinPengurusSistemDirect(pin);
+    }
+
+    // ==================== RETUR FUNCTIONS ====================
+    function bukaMenuRetur() {
+      document.getElementById('boxProteksiRetur').classList.remove('d-none');
+      document.getElementById('kontenReturAsli').classList.add('d-none');
+      document.getElementById('pinReturInput').value = '';
+    }
+
+    function verifikasiRetur() {
+      let pin = document.getElementById('pinReturInput').value;
+      if (!pin) {
+        alert("PIN tidak boleh kosong!");
+        return;
+      }
+
+      google.script.run
+        .withSuccessHandler(function(hasilValidasi) {
+          if (hasilValidasi.success) {
+            document.getElementById('boxProteksiRetur').classList.add('d-none');
+            document.getElementById('kontenReturAsli').classList.remove('d-none');
+          } else {
+            alert(hasilValidasi.message);
+          }
+        })
+        .withFailureHandler(err => { 
+          alert("Gagal koneksi: " + err.message); 
+        })
+        .validasiPinPengurusSistemDirect(pin);
+    }
+
+    function toggleKameraRetur() {
+      let areaCam = document.getElementById('readerRetur');
+      if (areaCam.style.display === 'block') {
+        areaCam.style.display = 'none';
+        if (html5QrcodeScannerRetur) html5QrcodeScannerRetur.clear();
+      } else {
+        areaCam.style.display = 'block';
+        html5QrcodeScannerRetur = new Html5QrcodeScanner("readerRetur", { fps: 10, qrbox: 220 });
+        html5QrcodeScannerRetur.render((decodedText) => {
+          document.getElementById('returKodeBarang').value = decodedText;
+          html5QrcodeScannerRetur.clear();
+          areaCam.style.display = 'none';
+        });
+      }
+    }
+
+    function simpanReturKeSistem() {
+      let kode = document.getElementById('returKodeBarang').value;
+      let qty = document.getElementById('returQty').value;
+      let jenis = document.getElementById('returJenis').value;
+      let alasan = document.getElementById('returAlasan').value;
+
+      if (!kode || !qty || !alasan) {
+        alert("Mohon isi semua kolom data retur!");
+        return;
+      }
+
+      if (confirm(`Apakah Anda yakin ingin memproses retur barang ini?`)) {
+        google.script.run
+          .withSuccessHandler(res => {
+            alert(res.pesan);
+            if (res.status === 'Sukses') {
+              document.getElementById('returKodeBarang').value = '';
+              document.getElementById('returQty').value = '1';
+              document.getElementById('returAlasan').value = '';
+              bukaMenuRetur();
+              muatDaftarBarang();
+            }
+          })
+          .prosesReturBarang(kode, qty, alasan, jenis);
+      }
+    }
+
+    // ==================== PENGURUS FUNCTIONS ====================
+    function bukaMenuPengurus() {
+      document.getElementById('containerDaftarPengurus').innerHTML = '<div class="text-center text-muted p-3">Memuat data pengurus...</div>';
+      
+      google.script.run
+        .withSuccessHandler(function(data) {
+          let html = '';
+          if (!data || data.length === 0) {
+            html = '<div class="alert alert-warning text-center">Belum ada data pengurus di Spreadsheet.</div>';
+          } else {
+            data.forEach(p => {
+              html += `
+                <div class="list-group-item d-flex justify-content-between align-items-center py-3 border-start-0 border-end-0">
+                  <div>
+                    <h6 class="fw-bold text-dark mb-0">${p.nama}</h6>
+                  </div>
+                  <span class="badge bg-primary rounded-pill px-3 py-2">${p.jabatan}</span>
+                </div>`;
+            });
+          }
+          document.getElementById('containerDaftarPengurus').innerHTML = html;
+        })
+        .withFailureHandler(function(err) {
+          document.getElementById('containerDaftarPengurus').innerHTML = `<div class="alert alert-danger text-center">Gagal memuat: ${err.message}</div>`;
+        })
+        .getDaftarPengurusLengkap();
+    }
+
+    // ==================== OPNAME & TAMBAH BARANG FUNCTIONS ====================
+    function toggleModeOpname() {
+      let mode = document.getElementById('pilihanAksiOpname').value;
+      let fieldProdukBaru = document.getElementById('fieldProdukBaru');
+      let labelStok = document.getElementById('labelStok');
+      let btn = document.getElementById('btnProsesOpname');
+
+      if (mode === 'baru') {
+        fieldProdukBaru.classList.remove('d-none');
+        labelStok.innerText = "Stok Awal*";
+        btn.className = "btn btn-success w-100 fw-bold mt-2";
+        btn.innerText = "💾 Simpan Produk Baru & Tampilkan di Menu";
+      } else {
+        fieldProdukBaru.classList.add('d-none');
+        labelStok.innerText = "Jumlah Stok Fisik Tambahan*";
+        btn.className = "btn btn-warning w-100 fw-bold mt-2";
+        btn.innerText = "📤 Process Stock Opname via Gambar";
+      }
+    }
+
+    function prosesPreviewGambar(event) {
+      let file = event.target.files[0];
+      if (!file) return;
+
+      let reader = new FileReader();
+      reader.onload = function(e) {
+        dataGambarBase64 = e.target.result;
+        document.getElementById('previewGambarOpname').src = dataGambarBase64;
+        document.getElementById('previewGambarContainer').classList.remove('d-none');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function prosesSimpanOpnameAtauBarang() {
+      let mode = document.getElementById('pilihanAksiOpname').value;
+      let kode = document.getElementById('opnameKodeBarang').value.trim();
+      let stok = document.getElementById('opnameStokBarang').value;
+      let fileInput = document.getElementById('fileGambarOpname');
+
+      if (!kode || !stok) {
+        alert("Kode/Barcode dan Jumlah Stok wajib diisi!");
+        return;
+      }
+
+      let objFile = null;
+      if (fileInput.files && fileInput.files.length > 0) {
+        let file = fileInput.files[0];
+        objFile = {
+          fileName: file.name,
+          mimeType: file.type,
+          base64Data: dataGambarBase64.split(',')[1]
+        };
+      }
+
+      if (mode === 'baru') {
+        let nama = document.getElementById('opnameNamaBarang').value.trim();
+        let harga = document.getElementById('opnameHargaBarang').value;
+        let kategori = document.getElementById('opnameKategoriBarang').value.trim() || 'Umum';
+
+        if (!nama || !harga) {
+          alert("Untuk Produk Baru, Nama dan Harga Jual wajib diisi!");
+          return;
+        }
+
+        alert("Sedang mendaftarkan produk baru...");
+        google.script.run
+          .withSuccessHandler(function(res) {
+            if (res.success) {
+              alert("🎉 " + res.message);
+              resetFormOpname();
+              setTimeout(function() { muatDaftarBarang(); }, 2000);
+            } else {
+              alert("❌ Gagal: " + res.message);
+            }
+          })
+          .withFailureHandler(function(err) {
+            alert("Error: " + err.message);
+          })
+          .tambahBarangBaruDirect(kode, nama, harga, stok, kategori, objFile);
+
+      } else {
+        alert("Sedang memproses update stok...");
+        google.script.run
+          .withSuccessHandler(function(res) {
+            if (res.success) {
+              alert("🎉 " + res.message);
+              resetFormOpname();
+              setTimeout(function() { muatDaftarBarang(); }, 2000);
+            } else {
+              alert("❌ Gagal: " + res.message);
+            }
+          })
+          .withFailureHandler(function(err) {
+            alert("Error: " + err.message);
+          })
+          .prosesOpnameDenganGambarDirect(kode, stok, objFile);
+      }
+    }
+
+    function resetFormOpname() {
+      document.getElementById('opnameKodeBarang').value = '';
+      document.getElementById('opnameStokBarang').value = '';
+      document.getElementById('opnameNamaBarang').value = '';
+      document.getElementById('opnameHargaBarang').value = '';
+      document.getElementById('opnameKategoriBarang').value = '';
+      document.getElementById('fileGambarOpname').value = '';
+      document.getElementById('previewGambarContainer').classList.add('d-none');
+      dataGambarBase64 = "";
+    }
+
+     // Fungsi ketika tombol Silang (X) atau Batal pada Modal Registrasi diklik
+function batalRegistrasi() {
+  // Tutup Modal Registrasi
+  var modalRegEl = document.getElementById('modalRegistrasi');
+  var modalReg = bootstrap.Modal.getInstance(modalRegEl);
+  if (modalReg) {
+    modalReg.hide();
+  }
+
+  // Cek apakah user sudah dalam posisi login
+  if (userLoginAktif) {
+    // Jika sudah login, tetap di halaman web tanpa logout
+    terapkanSesiUser();
+  } else {
+    // Jika belum login, tampilkan kembali Modal Login
+    bukaModalLogin();
+  }
+}
+
+// Fungsi Eksekusi Registrasi dengan penambahan Nama & Bagian
+function eksekusiRegistrasi() {
+  let nik = document.getElementById('regNik').value.trim();
+  let nama = document.getElementById('regNama').value.trim();
+  let bagian = document.getElementById('regBagian').value.trim();
+  let noHp = document.getElementById('regNoHp').value.trim();
+  let pin = document.getElementById('regPin').value.trim();
+  let btn = document.getElementById('btnProsesReg');
+
+  if (!nik || !nama || !bagian || !noHp || !pin) {
+    alert("Harap isi semua kolom!");
+    return;
+  }
+
+  if (pin.length < 4) {
+    alert("PIN minimal terdiri dari 4-6 angka!");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerText = "Memproses Registrasi...";
+
+  // Data dikirim lengkap termasuk nama dan bagian
+  let payload = { 
+    nik: nik, 
+    nama: nama, 
+    bagian: bagian, 
+    noHp: noHp, 
+    pin: pin 
+  };
+
+  google.script.run
+    .withSuccessHandler(function(response) {
+      btn.disabled = false;
+      btn.innerText = "Daftar & Buat PIN";
+
+      if (response.success) {
+        alert("🎉 " + response.message);
+        
+        var modalEl = document.getElementById('modalRegistrasi');
+        var modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+
+        document.getElementById('formRegistrasi').reset();
+
+        // Langsung buka modal login dan isi NIK otomatis
+        document.getElementById('loginNik').value = nik;
+        bukaModalLogin();
+      } else {
+        alert("❌ " + response.message);
+      }
+    })
+    .withFailureHandler(function(err) {
+      btn.disabled = false;
+      btn.innerText = "Daftar & Buat PIN";
+      alert("Terjadi kesalahan koneksi: " + err.message);
+    })
+    .prosesRegistrasiAnggota(payload);
+}
+  </script>
+</body>
+</html>
