@@ -5,9 +5,193 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Koperasi Gatra Maranatha</title>
 
-  <!-- 💡 1. SKRIP PROXY GOOGLE Wajib di Paling Atas agar 'google is not defined' Hilang -->
+  <!-- 1. CSS EXTERNAL -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- 2. JS EXTERNAL / CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- 3. STYLESHEET INTERNAL -->
+  <style>
+    /* ==================== BASE STYLES ==================== */
+    body {
+      background-color: #e8f5e9;
+      font-size: 14px;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .container {
+      padding-left: 8px !important;
+      padding-right: 8px !important;
+    }
+    
+    /* ==================== KATALOG BARANG ==================== */
+    #katalog {
+      display: flex;
+      flex-wrap: wrap;
+      margin-left: -4px !important;
+      margin-right: -4px !important;
+    }
+    
+    .col-barang {
+      padding-left: 4px !important;
+      padding-right: 4px !important;
+      margin-bottom: 8px !important;
+      box-sizing: border-box;
+    }
+
+    .card-barang {
+      border-radius: 8px !important;
+      border: 1px solid #e0e0e0 !important;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    
+    .card-body {
+      padding: 8px !important;
+    }
+    
+    .card-title {
+      font-size: 14px !important;
+      font-weight: bold;
+      line-height: 1.2;
+      height: 34px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 4px !important;
+    }
+    
+    .card-text {
+      font-size: 15px !important;
+      color: #dc3545 !important;
+      font-weight: bold;
+      margin-bottom: 2px !important;
+    }
+    
+    .stok-text {
+      font-size: 11px !important;
+      color: #6c757d;
+      margin-bottom: 6px;
+    }
+    
+    .card-barang .btn {
+      padding: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      border-radius: 6px;
+    }
+
+    /* ==================== KERANJANG ==================== */
+    #keranjang .list-group-item {
+      font-size: 15px !important;
+      padding: 10px 12px;
+    }
+    
+    #keranjang b {
+      font-size: 15px;
+    }
+    
+    /* ==================== NAV TABS ==================== */
+    .nav-tabs .nav-link {
+      color: #555;
+      font-weight: bold;
+      font-size: 18px !important;
+      padding: 12px 14px !important;
+    }
+    
+    .nav-tabs .nav-link.active {
+      color: #198754;
+      font-weight: bold;
+      border-bottom: 3px solid #198754 !important;
+    }
+
+    #keranjang-menu-tab {
+      font-size: 22px !important;
+    }
+
+    #notifKeranjang {
+      font-size: 11px !important;
+      padding: 4px 7px !important;
+      top: 5px !important;
+    }
+
+    /* ========================================================== */
+    /* KHUSUS UNTUK TAMPILAN HP (Layar di bawah 768px)            */
+    /* ========================================================== */
+    @media (max-width: 767px) {
+      .col-barang {
+        width: 33.33% !important;
+        flex: 0 0 33.33% !important;
+        max-width: 33.33% !important;
+      }
+      .card-barang img {
+        width: 100% !important;
+        height: 130px !important;
+        object-fit: contain !important;
+        background-color: #f8f9fa;
+      }
+
+      .nav-tabs .nav-link {
+        font-size: 14px !important;
+        padding: 8px 10px !important;
+        white-space: nowrap !important;
+      }
+      
+      #menuTab {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+      }
+    }
+
+    /* ========================================================== */
+    /* KHUSUS UNTUK TAMPILAN LAPTOP (Layar 768px ke atas)        */
+    /* ========================================================== */
+    @media (min-width: 768px) {
+      .col-barang {
+        width: 22% !important;
+        flex: 0 0 22% !important;
+        max-width: 22% !important;
+      }
+      .card-barang img {
+        width: 100% !important;
+        height: 260px !important;
+        object-fit: contain !important;
+        background-color: #f8f9fa;
+      }
+    }
+
+    /* Styling khusus dropdown menu */
+    .dropdown-menu {
+      border-radius: 8px !important;
+      border: 1px solid #e0e0e0 !important;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    
+    .dropdown-item {
+      font-size: 16px !important;
+      color: #555 !important;
+      font-weight: bold;
+      padding: 10px 16px !important;
+      background: none !important;
+      border: none !important;
+      width: 100%;
+      text-align: left;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f8f9fa !important;
+      color: #198754 !important;
+    }
+  </style>
+
+  <!-- 4. POLYFILL GOOGLE SCRIPT RUN -->
   <script>
-    // URL Web App Deployment Google Apps Script Anda (yang berakhiran /exec)
     const URL_APPS_SCRIPT_PRO = "https://script.google.com/macros/s/AKfycbxe5OzG2GUrrQOCgg-Zwg3ImkbssU5QJyKlEFAPxbLLTEMCiTBV-7KHXELWOr13cTFn/exec"; 
 
     window.google = window.google || {};
@@ -76,201 +260,9 @@
         });
       }
     })();
-  </script>  
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
- 
-  <!-- HTML5 QR Code Scanner -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
- 
-  <style>
-    /* ==================== BASE STYLES ==================== */
-    body {
-      background-color: #e8f5e9;
-      font-size: 14px;
-      margin: 0;
-      padding: 0;
-    }
-   
-    .container {
-      padding-left: 8px !important;
-      padding-right: 8px !important;
-    }
-   
-    /* ==================== KATALOG BARANG ==================== */
-    #katalog {
-      display: flex;
-      flex-wrap: wrap;
-      margin-left: -4px !important;
-      margin-right: -4px !important;
-    }
-   
-    .col-barang {
-      padding-left: 4px !important;
-      padding-right: 4px !important;
-      margin-bottom: 8px !important;
-      box-sizing: border-box;
-    }
-
-
-    .card-barang {
-      border-radius: 8px !important;
-      border: 1px solid #e0e0e0 !important;
-      overflow: hidden;
-      background: #ffffff;
-    }
-   
-    .card-body {
-      padding: 8px !important;
-    }
-   
-    .card-title {
-      font-size: 14px !important;
-      font-weight: bold;
-      line-height: 1.2;
-      height: 34px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      margin-bottom: 4px !important;
-    }
-   
-    .card-text {
-      font-size: 15px !important;
-      color: #dc3545 !important;
-      font-weight: bold;
-      margin-bottom: 2px !important;
-    }
-   
-    .stok-text {
-      font-size: 11px !important;
-      color: #6c757d;
-      margin-bottom: 6px;
-    }
-   
-    .card-barang .btn {
-      padding: 6px;
-      font-size: 13px;
-      font-weight: bold;
-      border-radius: 6px;
-    }
-
-
-    /* ==================== KERANJANG ==================== */
-    #keranjang .list-group-item {
-      font-size: 15px !important;
-      padding: 10px 12px;
-    }
-   
-    #keranjang b {
-      font-size: 15px;
-    }
-   
-    /* ==================== NAV TABS ==================== */
-    .nav-tabs .nav-link {
-      color: #555;
-      font-weight: bold;
-      font-size: 18px !important;
-      padding: 12px 14px !important;
-    }
-   
-    .nav-tabs .nav-link.active {
-      color: #198754;
-      font-weight: bold;
-      border-bottom: 3px solid #198754 !important;
-    }
-
-
-    #keranjang-menu-tab {
-      font-size: 22px !important;
-    }
-
-
-    #notifKeranjang {
-      font-size: 11px !important;
-      padding: 4px 7px !important;
-      top: 5px !important;
-    }
-
-
-    /* ========================================================== */
-    /* KHUSUS UNTUK TAMPILAN HP (Layar di bawah 768px)            */
-    /* ========================================================== */
-    @media (max-width: 767px) {
-      .col-barang {
-        width: 33.33% !important;
-        flex: 0 0 33.33% !important;
-        max-width: 33.33% !important;
-      }
-      .card-barang img {
-        width: 100% !important;
-        height: 130px !important;
-        object-fit: contain !important;
-        background-color: #f8f9fa;
-      }
-
-
-      .nav-tabs .nav-link {
-        font-size: 14px !important;
-        padding: 8px 10px !important;
-        white-space: nowrap !important;
-      }
-     
-      #menuTab {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        width: 100% !important;
-      }
-    }
-
-
-    /* ========================================================== */
-    /* KHUSUS UNTUK TAMPILAN LAPTOP (Layar 768px ke atas)         */
-    /* ========================================================== */
-    @media (min-width: 768px) {
-      .col-barang {
-        width: 22% !important;
-        flex: 0 0 22% !important;
-        max-width: 22% !important;
-      }
-      .card-barang img {
-        width: 100% !important;
-        height: 260px !important;
-        object-fit: contain !important;
-        background-color: #f8f9fa;
-      }
-    }
-
-
-    /* Styling khusus dropdown menu */
-    .dropdown-menu {
-      border-radius: 8px !important;
-      border: 1px solid #e0e0e0 !important;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    }
-   
-    .dropdown-item {
-      font-size: 16px !important;
-      color: #555 !important;
-      font-weight: bold;
-      padding: 10px 16px !important;
-      background: none !important;
-      border: none !important;
-      width: 100%;
-      text-align: left;
-    }
-
-
-    .dropdown-item:hover {
-      background-color: #f8f9fa !important;
-      color: #198754 !important;
-    }
-  </style>
+  </script>
 </head>
 <body>
-
 
   <!-- ==================== NAVBAR ==================== -->
   <nav class="navbar navbar-dark bg-success mb-3 shadow-sm">
@@ -288,13 +280,12 @@
     </div>
   </nav>
 
-
   <!-- ==================== MAIN CONTAINER ==================== -->
   <div class="container">
-   
+    
     <!-- Nav Tabs -->
     <ul class="nav nav-tabs mb-4 border-bottom-0" id="menuTab" role="tablist">
-     
+      
       <!-- 1. TOMBOL DROPDOWN UTAMA -->
       <li class="nav-item dropdown">
         <button class="nav-link dropdown-toggle" id="dropdownMenuUtama" data-bs-toggle="dropdown" type="button" aria-expanded="false">
@@ -321,7 +312,6 @@
         </ul>
       </li>
 
-
       <!-- 2. TOMBOL KERANJANG -->
       <li class="nav-item position-relative">
         <button class="nav-link" id="keranjang-menu-tab" data-bs-toggle="tab" data-bs-target="#tab-keranjang" type="button">
@@ -329,23 +319,20 @@
         </button>
       </li>
 
-
       <!-- 3. TOMBOL PENGURUS -->
       <li class="nav-item">
         <button class="nav-link" id="pengurus-tab" data-bs-toggle="tab" data-bs-target="#tab-pengurus" type="button" onclick="bukaMenuPengurus()">👥 Pengurus</button>
       </li>
 
-
     </ul>
-
 
     <!-- Tab Content -->
     <div class="tab-content">
-     
+      
       <!-- ==================== TAB BELANJA ==================== -->
       <div class="tab-pane fade show active" id="tab-belanja">
         <h4 class="mb-3 text-dark fw-bold">Katalog Barang</h4>
-       
+        
         <!-- Barcode Scanner Input -->
         <div class="card p-3 mb-3 border-0 shadow-sm rounded-3" style="display: none;">
           <div class="input-group">
@@ -356,23 +343,21 @@
           <div id="reader" class="mt-3 p-2 border"></div>
         </div>
 
-
         <!-- Katalog Barang -->
         <div class="row" id="katalog">
           <div class="col-12 text-center text-muted">Memuat daftar barang...</div>
         </div>
       </div>
 
-
       <!-- ==================== TAB KERANJANG ==================== -->
       <div class="tab-pane fade" id="tab-keranjang">
         <div class="card p-3 shadow-sm border-0 rounded-3">
           <h4 class="border-bottom pb-2 fw-bold text-dark">Keranjang Belanja</h4>
-         
+          
           <ul class="list-group mb-3" id="keranjang">
             <li class="list-group-item text-center text-muted small">Keranjang masih kosong</li>
           </ul>
-     
+      
           <!-- Input NIK -->
           <div class="mb-3">
             <label class="form-label font-weight-bold">NIK Pembeli</label>
@@ -380,13 +365,11 @@
             <small id="namaAnggota" class="form-text d-block mt-1 font-weight-bold" style="font-size: 14px;"></small>
           </div>
 
-
           <!-- Kolom PIN Transaksi -->
           <div id="box-pin" class="mb-3 d-none">
             <label class="form-label font-weight-bold text-danger">⚠️ Masukkan PIN Transaksi (Rahasia)</label>
             <input type="password" id="pinPembeli" class="form-control form-control-lg" placeholder="Masukkan PIN 4-6 Digit..." maxlength="6" inputmode="numeric" autocomplete="new-password">
           </div>
-
 
           <!-- Nota Sukses -->
           <div id="areaNotaSukses" class="mb-3 d-none">
@@ -395,17 +378,16 @@
               <button id="linkDownloadPdf" class="btn btn-sm btn-danger w-100 fw-bold">📲 Kirim Struk via WhatsApp</button>
             </div>
           </div>
-         
+          
           <button class="btn btn-success w-100 py-2 fw-bold" onclick="checkout()">Selesaikan Pembayaran</button>
         </div>
       </div>
-
 
       <!-- ==================== TAB RETUR ==================== -->
       <div class="tab-pane fade" id="retur">
         <div class="p-3">
           <h4 class="fw-bold mb-3">🔄 Form Retur Barang</h4>
-         
+          
           <!-- Proteksi PIN -->
           <div id="boxProteksiRetur" class="card p-3 mb-3 shadow-sm">
             <label class="form-label fw-bold small text-muted">Masukkan PIN Pengurus untuk Mengakses Menu Retur:</label>
@@ -414,7 +396,6 @@
               <button class="btn btn-sm btn-dark fw-bold" onclick="verifikasiRetur()">Masuk</button>
             </div>
           </div>
-
 
           <!-- Konten Retur -->
           <div id="kontenReturAsli" class="card p-3 shadow-sm d-none">
@@ -427,12 +408,10 @@
               <div id="readerRetur" style="width: 100%; max-width: 350px; margin: 10px auto; display: none;"></div>
             </div>
 
-
             <div class="mb-3">
               <label class="form-label fw-bold small">Jumlah (Qty) Retur:</label>
               <input type="number" id="returQty" class="form-control" value="1" min="1">
             </div>
-
 
             <div class="mb-3">
               <label class="form-label fw-bold small">Jenis Arah Retur:</label>
@@ -442,18 +421,15 @@
               </select>
             </div>
 
-
             <div class="mb-3">
               <label class="form-label fw-bold small">Alasan / Keterangan Retur:</label>
               <textarea id="returAlasan" class="form-control" rows="2" placeholder="Contoh: Barang kedaluwarsa / Rusak fisik"></textarea>
             </div>
 
-
             <button class="btn btn-danger w-100 fw-bold py-2" onclick="simpanReturKeSistem()">💾 Proses & Simpan Retur</button>
           </div>
         </div>
       </div>
-
 
       <!-- ==================== TAB LAPORAN ==================== -->
       <div class="tab-pane fade" id="tab-laporan">
@@ -467,7 +443,6 @@
           </div>
         </div>
 
-
         <!-- Konten Laporan -->
         <div class="row d-none" id="kontenLaporanAsli">
           <div class="col-md-4 mb-3">
@@ -476,14 +451,14 @@
               <h2 class="fw-bold" id="lapPendapatan">Rp 0</h2>
             </div>
           </div>
-         
+          
           <div class="col-md-4 mb-3">
             <div class="card bg-primary text-white p-4 border-0 shadow-sm rounded-3">
               <h6>Jumlah Transaksi (Nota)</h6>
               <h2 class="fw-bold" id="lapTransaksi">0 Transaksi</h2>
             </div>
           </div>
-         
+          
           <div class="col-md-4 mb-3">
             <div class="card bg-info text-white p-4 border-0 shadow-sm rounded-3">
               <h6>Total Produk Terjual</h6>
@@ -491,13 +466,12 @@
             </div>
           </div>
 
-
           <!-- Stok Opname & Tambah Barang -->
           <div class="col-12 mt-3">
             <div class="card p-4 border-warning shadow-sm rounded-3">
               <h5 class="fw-bold text-dark">📦 Menu Khusus: Tambah Stock Opname / Produk Baru</h5>
               <p class="small text-muted mb-3">Pilih aksi untuk memperbarui stok barang eksis atau menambah produk baru ke dalam sistem.</p>
-             
+              
               <div class="mb-3">
                 <label class="form-label fw-bold small">Pilih Aksi:</label>
                 <select id="pilihanAksiOpname" class="form-select fw-bold text-primary" onchange="toggleModeOpname()">
@@ -506,19 +480,16 @@
                 </select>
               </div>
 
-
               <div class="row g-2">
                 <div class="col-md-6 mb-2">
                   <label class="form-label small fw-bold">Kode / Barcode Barang*</label>
                   <input type="text" id="opnameKodeBarang" class="form-control" placeholder="Contoh: BRG001 / 899123456">
                 </div>
 
-
                 <div class="col-md-6 mb-2">
                   <label class="form-label small fw-bold" id="labelStok">Jumlah Stok Fisik Tambahan*</label>
                   <input type="number" id="opnameStokBarang" class="form-control" placeholder="Contoh: 50">
                 </div>
-
 
                 <div id="fieldProdukBaru" class="row g-2 m-0 p-0 d-none">
                   <div class="col-md-6 mb-2">
@@ -535,19 +506,16 @@
                   </div>
                 </div>
 
-
                 <div class="col-12 mb-3 mt-2">
                   <label class="form-label fw-bold small">Foto Gambar / Barcode Produk (Upload Device):</label>
                   <input type="file" id="fileGambarOpname" class="form-control" accept="image/*" onchange="prosesPreviewGambar(event)">
                 </div>
               </div>
 
-
               <div id="previewGambarContainer" class="text-center d-none mb-3">
                 <p class="small text-muted mb-1">Preview Gambar:</p>
                 <img id="previewGambarOpname" src="" alt="Preview" class="img-fluid rounded border" style="max-height: 200px;">
               </div>
-
 
               <button id="btnProsesOpname" class="btn btn-warning w-100 fw-bold mt-2" onclick="prosesSimpanOpnameAtauBarang()">
                 📤 Process Stock Opname via Gambar
@@ -556,7 +524,7 @@
           </div>
         </div>
       </div>
-   
+    
       <!-- ==================== TAB PENGURUS ==================== -->
       <div class="tab-pane fade" id="tab-pengurus">
         <div class="card p-2 shadow-sm border-0 rounded-3 mt-0">
@@ -567,10 +535,9 @@
           </div>
         </div>
       </div>
-     
+      
     </div> <!-- End Tab Content -->
   </div> <!-- End Container -->
-
 
   <!-- ==================== MODAL LOGIN ANGGOTA ==================== -->
   <div class="modal fade" id="modalLogin" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
@@ -601,50 +568,45 @@
     </div>
   </div>
 
-
   <!-- ==================== MODAL REGISTRASI ANGGOTA ==================== -->
-<div class="modal fade" id="modalRegistrasi" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title fw-bold">Registrasi PIN & No HP Anggota</h5>
-        <!-- Tombol X dengan penanganan pembatalan -->
-        <button type="button" class="btn-close btn-close-white" onclick="batalRegistrasi()" aria-label="Close"></button>
-      </div>
-      <div class="modal-body p-4">
-        <form id="formRegistrasi" onsubmit="event.preventDefault(); eksekusiRegistrasi();">
-          <div class="mb-3">
-            <label class="form-label fw-bold">NIK Anggota</label>
-            <input type="text" id="regNik" class="form-control" placeholder="Masukkan NIK Koperasi Anda" required>
-          </div>
-          <!-- Field Tambahan: Nama Lengkap -->
-          <div class="mb-3">
-            <label class="form-label fw-bold">Nama Lengkap</label>
-            <input type="text" id="regNama" class="form-control" placeholder="Masukkan Nama Lengkap Anda" required>
-          </div>
-          <!-- Field Tambahan: Bagian / Divisi -->
-          <div class="mb-3">
-            <label class="form-label fw-bold">Bagian / Divisi / Unit Kerja</label>
-            <input type="text" id="regBagian" class="form-control" placeholder="Contoh: Produksi / Gudang / HRD" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-bold">Nomor WhatsApp (Aktif)</label>
-            <input type="number" id="regNoHp" class="form-control" placeholder="Contoh: 08123456789" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-bold">Buat PIN Transaksi Baru (6 Angka)</label>
-            <input type="password" id="regPin" class="form-control" maxlength="6" inputmode="numeric" placeholder="Masukkan 6 angka PIN rahasia" required>
-          </div>
-          <div class="d-flex gap-2">
-            <button type="button" class="btn btn-light w-50 fw-bold" onclick="batalRegistrasi()">Batal</button>
-            <button type="submit" class="btn btn-success w-50 fw-bold" id="btnProsesReg">Daftar & Buat PIN</button>
-          </div>
-        </form>
+  <div class="modal fade" id="modalRegistrasi" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title fw-bold">Registrasi PIN & No HP Anggota</h5>
+          <button type="button" class="btn-close btn-close-white" onclick="batalRegistrasi()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form id="formRegistrasi" onsubmit="event.preventDefault(); eksekusiRegistrasi();">
+            <div class="mb-3">
+              <label class="form-label fw-bold">NIK Anggota</label>
+              <input type="text" id="regNik" class="form-control" placeholder="Masukkan NIK Koperasi Anda" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Nama Lengkap</label>
+              <input type="text" id="regNama" class="form-control" placeholder="Masukkan Nama Lengkap Anda" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Bagian / Divisi / Unit Kerja</label>
+              <input type="text" id="regBagian" class="form-control" placeholder="Contoh: Produksi / Gudang / HRD" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Nomor WhatsApp (Aktif)</label>
+              <input type="number" id="regNoHp" class="form-control" placeholder="Contoh: 08123456789" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Buat PIN Transaksi Baru (6 Angka)</label>
+              <input type="password" id="regPin" class="form-control" maxlength="6" inputmode="numeric" placeholder="Masukkan 6 angka PIN rahasia" required>
+            </div>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-light w-50 fw-bold" onclick="batalRegistrasi()">Batal</button>
+              <button type="submit" class="btn btn-success w-50 fw-bold" id="btnProsesReg">Daftar & Buat PIN</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
 
   <!-- ==================== MODAL SUKSES ==================== -->
   <div class="modal fade" id="modalSuksesCustom" tabindex="-1" aria-hidden="true">
@@ -659,8 +621,7 @@
     </div>
   </div>
 
-
-<!-- ==================== MODAL KONFIRMASI LOGOUT ==================== -->
+  <!-- ==================== MODAL KONFIRMASI LOGOUT ==================== -->
   <div class="modal fade" id="modalLogoutConfirm" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content border-0 shadow" style="border-radius: 12px;">
