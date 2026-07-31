@@ -28,7 +28,6 @@
       margin-right: -4px !important;
     }
     
-    
     .col-barang {
       padding-left: 4px !important;
       padding-right: 4px !important;
@@ -104,7 +103,20 @@
       padding: 4px 7px !important;
       top: 5px !important;
     }
+ /* Pastikan area navbar dan dropdown selalu berada di lapisan paling atas */
+.navbar {
+  position: relative;
+  z-index: 1050;
+}
 
+.nav-tabs .dropdown {
+  position: relative;
+  z-index: 1050;
+}
+
+.dropdown-menu {
+  z-index: 1060 !important;
+}
     /* ========================================================== */
     /* KHUSUS UNTUK TAMPILAN HP (Layar di bawah 768px)            */
     /* ========================================================== */
@@ -170,8 +182,8 @@
       background-color: #f8f9fa !important;
       color: #198754 !important;
     }
-    
    </style>
+  
   <!-- 4. POLYFILL GOOGLE SCRIPT RUN -->
   <script>
     const URL_APPS_SCRIPT_PRO = "https://script.google.com/macros/s/AKfycbxe5OzG2GUrrQOCgg-Zwg3ImkbssU5QJyKlEFAPxbLLTEMCiTBV-7KHXELWOr13cTFn/exec"; 
