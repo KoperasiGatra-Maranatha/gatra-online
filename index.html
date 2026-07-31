@@ -709,18 +709,24 @@
 
 
     // ==================== INIT ====================
-    document.addEventListener("DOMContentLoaded", function() {
-      muatDaftarBarang();
-     
-      // Cek apakah ada data login tersimpan di LocalStorage browser
-      let savedUser = localStorage.getItem("gatra_user_session");
-      if (savedUser) {
-        userLoginAktif = JSON.parse(savedUser);
-        terapkanSesiUser();
-      } else {
-        bukaModalLogin();
-      }
-    });
+   document.addEventListener("DOMContentLoaded", function() {
+  // 1. Cek Sesi Login Dulu
+  let savedUser = localStorage.getItem("gatra_user_session");
+  if (savedUser) {
+    try {
+      userLoginAktif = JSON.parse(savedUser);
+      terapkanSesiUser();
+    } catch(e) {
+      console.error("Session error:", e);
+      bukaModalLogin();
+    }
+  } else {
+    bukaModalLogin();
+  }
+
+  // 2. Jalankan pemuatan katalog barang
+  muatDaftarBarang();
+});
 
 
     // ==================== LOGIN & SESI USER ====================
