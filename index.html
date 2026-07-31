@@ -4,10 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Koperasi Gatra Maranatha</title>
-
   <!-- 1. CSS EXTERNAL -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
   <!-- 2. JS EXTERNAL / CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -20,8 +18,7 @@
       font-size: 14px;
       margin: 0;
       padding: 0;
-    }
-    
+    } 
     .container {
       padding-left: 8px !important;
       padding-right: 8px !important;
@@ -64,27 +61,23 @@
       overflow: hidden;
       margin-bottom: 4px !important;
     }
-    
     .card-text {
       font-size: 15px !important;
       color: #dc3545 !important;
       font-weight: bold;
       margin-bottom: 2px !important;
-    }
-    
+    } 
     .stok-text {
       font-size: 11px !important;
       color: #6c757d;
       margin-bottom: 6px;
-    }
-    
+    }  
     .card-barang .btn {
       padding: 6px;
       font-size: 13px;
       font-weight: bold;
       border-radius: 6px;
     }
-
     /* ==================== KERANJANG ==================== */
     #keranjang .list-group-item {
       font-size: 15px !important;
@@ -226,7 +219,6 @@
           if (failureCb) failureCb(new Error("Gagal mengambil data dari server. Cek koneksi Web App."));
         });
       }
-
       return new Proxy({}, {
         get: function(target, prop) {
           if (prop === 'withSuccessHandler') {
@@ -281,7 +273,6 @@
       </div>
     </div>
   </nav>
-
   <!-- ==================== MAIN CONTAINER ==================== -->
   <div class="container">
     
@@ -1418,9 +1409,9 @@ function eksekusiRegistrasi() {
     })
     .prosesRegistrasiAnggota(payload);
 }
-  </script>
-    <!-- Bootstrap JS -->
+<!-- Bootstrap JS-->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </script>
 </body>
 </html>
 
