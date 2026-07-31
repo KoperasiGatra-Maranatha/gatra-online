@@ -6,13 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Koperasi Digital Pro</title>
   <script>
-  // ⚠️ GANTI DENGAN URL WEB APP DEPLOYMENT APPS SCRIPT ANDA (Berakhiran /exec)
-  const URL_APPS_SCRIPT_PRO = "https://script.google.com/macros/s/AKfycbxe5OzG2GUrrQOCgg-Zwg3ImkbssU5QJyKlEFAPxbLLTEMCiTBV-7KHXELWOr13cTFn/exec"; 
+  <script>
+  // ⚠️ Masukkan URL Web App Apps Script Anda di sini (yang berakhiran /exec)
+  const URL_APPS_SCRIPT_PRO = "https://script.google.com/macros/s/AKfycbx...AKSEN_URL_ASLI_ANDA.../exec"; 
 
   window.google = window.google || {};
   window.google.script = window.google.script || {};
 
-  // Polyfill google.script.run menggunakan Proxy
+  // Polyfill Proxy untuk menggantikan google.script.run
   window.google.script.run = (function() {
     let successCallback = null;
     let failureCallback = null;
@@ -33,7 +34,6 @@
         if (prop === 'withSuccessHandler') return target.withSuccessHandler;
         if (prop === 'withFailureHandler') return target.withFailureHandler;
 
-        // Saat fungsi seperti google.script.run.prosesLoginAnggota(nik, pin) dipanggil:
         return function(...args) {
           const payload = {
             namaFungsi: prop,
@@ -42,9 +42,9 @@
 
           fetch(URL_APPS_SCRIPT_PRO, {
             method: "POST",
-            redirect: "follow", // Wajib agar mengikuti redirect dari Apps Script
+            redirect: "follow",
             headers: {
-              "Content-Type": "text/plain;charset=utf-8" // Agar tidak kena CORS Preflight
+              "Content-Type": "text/plain;charset=utf-8"
             },
             body: JSON.stringify(payload)
           })
@@ -60,8 +60,7 @@
       }
     });
   })();
-</script>
-  <!-- Bootstrap CSS -->
+</script>  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
  
   <!-- HTML5 QR Code Scanner -->
