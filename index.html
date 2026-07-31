@@ -620,7 +620,6 @@
       </div>
     </div>
   </div>
-
   <!-- ==================== MODAL KONFIRMASI LOGOUT ==================== -->
   <div class="modal fade" id="modalLogoutConfirm" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -641,10 +640,8 @@
 <script>
     // URL Web App Deployment Google Apps Script Anda (yang berakhiran /exec)
     const URL_APPS_SCRIPT_PRO = "https://script.google.com/macros/s/AKfycbxe5OzG2GUrrQOCgg-Zwg3ImkbssU5QJyKlEFAPxbLLTEMCiTBV-7KHXELWOr13cTFn/exec"; 
-
     window.google = window.google || {};
     window.google.script = window.google.script || {};
-
     window.google.script.run = (function() {
       function executeFetch(namaFungsi, parameter, successCb, failureCb) {
         fetch(URL_APPS_SCRIPT_PRO, {
@@ -671,7 +668,6 @@
           if (failureCb) failureCb(new Error("Gagal mengambil data dari server. Cek koneksi Web App."));
         });
       }
-
       return new Proxy({}, {
         get: function(target, prop) {
           if (prop === 'withSuccessHandler') {
@@ -697,7 +693,6 @@
           return createRunner(null, null)[prop];
         }
       });
-
       function createRunner(successCb, failureCb) {
         return new Proxy({}, {
           get: function(t, fnName) {
@@ -709,8 +704,6 @@
       }
     })();
   </script>
-
-
   <!-- ==================== JAVASCRIPT ==================== -->
   <script>
     // ==================== VARIABLES GLOBAL ====================
@@ -722,9 +715,7 @@
     let html5QrcodeScannerRetur = null;
     let dataGambarBase64 = "";
     let userLoginAktif = null; // Menyimpan data sesi login
-
-
-    // ==================== INIT ====================
+   // ==================== INIT ====================
    document.addEventListener("DOMContentLoaded", function() {
   // 1. Cek Sesi Login Dulu
   let savedUser = localStorage.getItem("gatra_user_session");
@@ -739,52 +730,36 @@
   } else {
     bukaModalLogin();
   }
-
   // 2. Jalankan pemuatan katalog barang
   muatDaftarBarang();
 });
-
-
     // ==================== LOGIN & SESI USER ====================
     function bukaModalLogin() {
       var modalLogin = new bootstrap.Modal(document.getElementById('modalLogin'));
       modalLogin.show();
     }
-
-
     function eksekusiLogin() {
       let nik = document.getElementById('loginNik').value.trim();
       let pin = document.getElementById('loginPin').value.trim();
       let btn = document.getElementById('btnProsesLogin');
-
-
       if (!nik || !pin) {
         alert("NIK dan PIN wajib diisi!");
         return;
       }
-
-
       btn.disabled = true;
       btn.innerText = "Memverifikasi...";
-
-
       google.script.run
         .withSuccessHandler(function(response) {
           btn.disabled = false;
           btn.innerText = "Masuk ke Aplikasi";
-
-
           if (response.success) {
             userLoginAktif = response.user;
             // Simpan sesi login di memori browser
             localStorage.setItem("gatra_user_session", JSON.stringify(userLoginAktif));
-           
             // Tutup modal login
             var modalEl = document.getElementById('modalLogin');
             var modal = bootstrap.Modal.getInstance(modalEl);
             if (modal) modal.hide();
-
-
             terapkanSesiUser();
             alert("🎉 " + response.message + "\nSelamat datang, " + response.user.nama);
           } else {
@@ -798,15 +773,11 @@
         })
         .prosesLoginAnggota(nik, pin);
     }
-
-
     function terapkanSesiUser() {
       if (userLoginAktif) {
         // Tampilkan info akun di Navbar
         document.getElementById('badgeUserLogin').innerHTML = "👤 " + userLoginAktif.nama;
         document.getElementById('badgeUserLogin').className = "badge bg-warning text-dark fw-bold py-2";
-
-
         // Isikan otomatis ke kolom NIK Kasir / Keranjang
         let inputNikKasir = document.getElementById('nikPembeli');
         if (inputNikKasir) {
@@ -815,37 +786,26 @@
         }
       }
     }
-
-
    function eksekusiLogout() {
   localStorage.removeItem("gatra_user_session");
   userLoginAktif = null;
- 
   // Reset tampilan
   document.getElementById('badgeUserLogin').innerHTML = "🔑 Login Anggota";
   document.getElementById('badgeUserLogin').className = "badge bg-light text-success fw-bold py-2";
- 
   document.getElementById('nikPembeli').value = "";
   document.getElementById('namaAnggota').innerText = "";
   document.getElementById('box-pin').classList.add('d-none');
- 
   bukaModalLogin();
 }
-
-
     function pindahKeRegistrasi(event) {
   // Cegah link me-refresh halaman/aplikasi
   if (event) event.preventDefault();
-
-
   // Tutup Modal Login
   var modalLoginEl = document.getElementById('modalLogin');
   var modalLogin = bootstrap.Modal.getInstance(modalLoginEl);
   if (modalLogin) {
     modalLogin.hide();
   }
-
-
   // Buka Modal Registrasi
   var modalRegEl = document.getElementById('modalRegistrasi');
   var modalReg = bootstrap.Modal.getInstance(modalRegEl) || new bootstrap.Modal(modalRegEl);
@@ -863,31 +823,22 @@
         })
         .getDaftarBarang();
     }
-
-
     function tampilkanKatalog(barang) {
       let html = '';
       if (!barang || barang.length === 0) {
         document.getElementById('katalog').innerHTML = '<p class="text-muted text-center w-100 p-3">Tidak ada barang.</p>';
         return;
       }
-     
       barang.forEach(item => {
         let rawGambar = item.gambar ? item.gambar.toString() : "";
         let fileId = "";
         let match = rawGambar.match(/[-\w]{25,}/);
-
-
         if (match && match[0]) {
           fileId = match[0];
         }
-
-
         let linkGambar = fileId
           ? "https://drive.google.com/thumbnail?sz=w300&id=" + fileId + "&t=" + new Date().getTime()
           : "https://via.placeholder.com/200?text=No+Image";
-
-
         html += `
           <div class="mb-2 px-1 col-barang">
             <div class="card card-barang h-100 shadow-sm border-0">
@@ -905,12 +856,8 @@
       });
       document.getElementById('katalog').innerHTML = html;
     }
-
-
     // ==================== ANGGOTA FUNCTIONS ====================
     let penundaPencarian;
-
-
     function pemicuCekAnggota() {
       clearTimeout(penundaPencarian);
       let nik = document.getElementById('nikPembeli').value;
@@ -919,14 +866,10 @@
         document.getElementById('box-pin').classList.add('d-none');
         return;
       }
-
-
       penundaPencarian = setTimeout(function() {
         cekAnggota();
       }, 500);
     }
-
-
     function cekAnggota() {
       let nik = document.getElementById('nikPembeli').value;
       if (!nik) return;
@@ -937,10 +880,7 @@
         document.getElementById('box-pin').classList.add('d-none');
         return;
       }
-
-
       document.getElementById('namaAnggota').innerText = "Memeriksa NIK...";
-     
       google.script.run
         .withSuccessHandler(function(response) {
           if (response.status) {
@@ -962,8 +902,6 @@
         })
         .validasiAnggota(nik);
     }
-
-
     // ==================== KERANJANG FUNCTIONS ====================
     function tambahKeKeranjang(kode) {
       let barang = semuaBarang.find(b => b.kode == kode);
@@ -984,27 +922,19 @@
         alert("Stok habis!");
       }
     }
-
-
     function updateKeranjangUI() {
       let html = '';
       let total = 0;
       let totalItem = 0;
-
-
       if (keranjang.length === 0) {
         document.getElementById('keranjang').innerHTML = '<li class="list-group-item text-center text-muted small">Keranjang masih kosong</li>';
         document.getElementById('notifKeranjang').classList.add('d-none');
         return;
       }
-
-
       keranjang.forEach((item, index) => {
         let subtotal = item.harga * item.qty;
         total += subtotal;
         totalItem += item.qty;
-
-
         html += `
           <li class="list-group-item d-flex justify-content-between align-items-center">
             <div>
@@ -1018,10 +948,7 @@
             </div>
           </li>`;
       });
-
-
       document.getElementById('keranjang').innerHTML = html;
-     
       let infoNotif = document.getElementById('notifKeranjang');
       if (totalItem > 0) {
         infoNotif.innerText = totalItem;
@@ -1030,8 +957,6 @@
         infoNotif.classList.add('d-none');
       }
     }
-
-
     function tambahKeranjangLagi(idx) {
       let barangAsli = semuaBarang.find(b => b.kode == keranjang[idx].kode);
       if (barangAsli && barangAsli.stok > keranjang[idx].qty) {
@@ -1041,8 +966,6 @@
         alert("Stok barang di toko tidak mencukupi!");
       }
     }
-
-
     function kurangiKeranjang(idx) {
       if (keranjang[idx].qty > 1) {
         keranjang[idx].qty--;
@@ -1051,8 +974,6 @@
       }
       updateKeranjangUI();
     }
-
-
     // ==================== BARCODE SCANNER FUNCTIONS ====================
     function scanBarangManual() {
       let kode = document.getElementById('barcodeInput').value.toString().trim();
@@ -1070,33 +991,25 @@
         document.getElementById('barcodeInput').value = '';
       }
     }
-
-
     function toggleKameraHP() {
       let areaCam = document.getElementById('reader');
       if (!areaCam) return;
-     
       if (areaCam.style.display === 'block') {
         areaCam.style.display = 'none';
         if (html5QrcodeScanner) html5QrcodeScanner.clear().catch(err => console.log(err));
       } else {
         areaCam.style.display = 'block';
-       
         html5QrcodeScanner = new Html5QrcodeScanner("reader", {
           fps: 10,
           qrbox: 250,
           supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
         });
-       
         html5QrcodeScanner.render((decodedText) => {
           let kodeScan = decodedText.toString().trim();
-         
           let produk = semuaBarang.find(item =>
             (item.barcode && item.barcode.toString().trim() === kodeScan) ||
             (item.kode && item.kode.toString().trim() === kodeScan)
           );
-
-
           if (produk) {
             if (Number(produk.stok) <= 0) {
               alert("⚠️ Maaf, Stok untuk barang '" + produk.nama + "' sudah habis!");
@@ -1115,36 +1028,27 @@
         });
       }
     }
-
-
     // ==================== CHECKOUT FUNCTIONS ====================
     function checkout() {
       if (keranjang.length === 0) {
         alert("Keranjang masih kosong!");
         return;
       }
-     
       let nikInputElement = document.getElementById('nikPembeli');
       let nik = nikInputElement.value;
       if (!nik) {
         alert("Silakan masukkan NIK Pembeli terlebih dahulu!");
         return;
       }
-
-
       let pinInputElement = document.getElementById('pinPembeli');
       let pin = pinInputElement.value;
       if (!pin) {
         alert("❌ Transaksi Ditolak: Anda wajib memasukkan PIN Transaksi!");
         return;
       }
-
-
       let elemenNama = document.getElementById('namaAnggota').innerText;
-     
       if (!elemenNama || elemenNama.includes("🔴") || elemenNama.includes("Memeriksa") || elemenNama.trim() === "") {
         alert("❌ Transaksi Ditolak: Hanya Anggota terdaftar yang boleh bertransaksi!\nSistem akan mengosongkan kembali keranjang belanja.");
-       
         nikInputElement.value = "";
         pinInputElement.value = "";
         document.getElementById('namaAnggota').innerText = "";
@@ -1154,33 +1058,22 @@
        
         return;
       }
-
-
       prosesSimpanTransaksiKeSheets(nik, "Umum");
     }
-
-
     function prosesSimpanTransaksiKeSheets(nik, namaPengurusAktif) {
       let elemenNama = document.getElementById('namaAnggota').innerText;
       let namaAsliPembeli = "Pelanggan";
-     
       if (elemenNama && !elemenNama.includes("🔴") && !elemenNama.includes("Memeriksa")) {
         namaAsliPembeli = elemenNama.replace("🟢", "").replace("🔴", "").trim();
       }
-
-
       let pinInputElement = document.getElementById('pinPembeli');
       let pinInputan = pinInputElement ? pinInputElement.value : "";
-
-
       let total = 0;
       let teksDaftarBarang = "";
       keranjang.forEach(item => {
         total += (item.harga * item.qty);
         teksDaftarBarang += `- ${item.nama} (${item.qty}x) = Rp ${(item.harga * item.qty).toLocaleString('id-ID')}\n`;
       });
-
-
       let dataTransaksi = {
         nik: nik,
         pin: pinInputan,
@@ -1189,37 +1082,26 @@
         keranjang: keranjang,
         pengurus: namaPengurusAktif
       };
-
-
       document.getElementById('namaAnggota').innerText = "Memproses Transaksi...";
       document.getElementById('areaNotaSukses').classList.add('d-none');
-
-
       google.script.run
         .withSuccessHandler(function(response) {
           if (response.success) {
             var myModal = new bootstrap.Modal(document.getElementById('modalSuksesCustom'));
             myModal.show();
-           
             document.getElementById('areaNotaSukses').classList.remove('d-none');
-           
             let nomorTujuan = noHpPembeliAktif ? noHpPembeliAktif : "628XXXXXXXXXX";
             if (nomorTujuan.startsWith("0")) nomorTujuan = "62" + nomorTujuan.slice(1);
             nomorTujuan = nomorTujuan.replace(/[- ]/g, '');
-
-
             let pesanFormat = `*KOPERASI GATRA MARANATHA*\n=========================\n*No Nota:* ${response.noNota}\n*Pembeli:* ${namaAsliPembeli}\n=========================\n${teksDaftarBarang}=========================\n*Total Bayar:* Rp ${total.toLocaleString('id-ID')}\n\nTerima kasih atas kunjungan Anda!`;
             let urlWhatsApp = "https://wa.me/" + nomorTujuan + "?text=" + encodeURIComponent(pesanFormat);
            
             let tombolMerah = document.getElementById('linkDownloadPdf');
             if (tombolMerah) tombolMerah.setAttribute("onclick", `window.open('${urlWhatsApp}', '_blank')`);
-
-
             // Reset Keranjang & Form
             keranjang = [];
             updateKeranjangUI();
             if (pinInputElement) pinInputElement.value = '';
-           
             // Jaga NIK tetap ada jika user ter-login
             if (userLoginAktif) {
               document.getElementById('nikPembeli').value = userLoginAktif.nik;
@@ -1229,8 +1111,6 @@
               document.getElementById('box-pin').classList.add('d-none');
               document.getElementById('namaAnggota').innerText = '';
             }
-
-
             muatDaftarBarang();
           } else {
             alert(response.message);
@@ -1243,30 +1123,23 @@
         })
         .simpanNotaKeSpreadsheet(dataTransaksi);
     }
-
-
     // ==================== LAPORAN FUNCTIONS ====================
     function bukaLaporan() {
       document.getElementById('boxProteksiLaporan').classList.remove('d-none');
       document.getElementById('kontenLaporanAsli').classList.add('d-none');
       document.getElementById('pinPengurusInput').value = '';
     }
-
-
     function verifikasiLaporan() {
       let pin = document.getElementById('pinPengurusInput').value;
       if (!pin) {
         alert("PIN tidak boleh kosong!");
         return;
       }
-
-
       google.script.run
         .withSuccessHandler(function(hasilValidasi) {
           if (hasilValidasi.success) {
             document.getElementById('boxProteksiLaporan').classList.add('d-none');
             document.getElementById('kontenLaporanAsli').classList.remove('d-none');
-           
             google.script.run
               .withSuccessHandler(data => {
                 document.getElementById('lapPendapatan').innerText = "Rp " + data.totalPendapatan.toLocaleString('id-ID');
@@ -1274,7 +1147,6 @@
                 document.getElementById('lapItemTerjual').innerText = data.totalItemTerjual + " Pcs";
               })
               .getLaporanKoperasi();
-           
           } else {
             alert(hasilValidasi.message);
           }
@@ -1284,24 +1156,18 @@
         })
         .validasiPinPengurusSistemDirect(pin);
     }
-
-
     // ==================== RETUR FUNCTIONS ====================
     function bukaMenuRetur() {
       document.getElementById('boxProteksiRetur').classList.remove('d-none');
       document.getElementById('kontenReturAsli').classList.add('d-none');
       document.getElementById('pinReturInput').value = '';
     }
-
-
     function verifikasiRetur() {
       let pin = document.getElementById('pinReturInput').value;
       if (!pin) {
         alert("PIN tidak boleh kosong!");
         return;
       }
-
-
       google.script.run
         .withSuccessHandler(function(hasilValidasi) {
           if (hasilValidasi.success) {
@@ -1316,8 +1182,6 @@
         })
         .validasiPinPengurusSistemDirect(pin);
     }
-
-
     function toggleKameraRetur() {
       let areaCam = document.getElementById('readerRetur');
       if (areaCam.style.display === 'block') {
@@ -1346,8 +1210,6 @@
         alert("Mohon isi semua kolom data retur!");
         return;
       }
-
-
       if (confirm(`Apakah Anda yakin ingin memproses retur barang ini?`)) {
         google.script.run
           .withSuccessHandler(res => {
@@ -1363,8 +1225,6 @@
           .prosesReturBarang(kode, qty, alasan, jenis);
       }
     }
-
-
     // ==================== PENGURUS FUNCTIONS ====================
     function bukaMenuPengurus() {
       document.getElementById('containerDaftarPengurus').innerHTML = '<div class="text-center text-muted p-3">Memuat data pengurus...</div>';
@@ -1400,8 +1260,6 @@
       let fieldProdukBaru = document.getElementById('fieldProdukBaru');
       let labelStok = document.getElementById('labelStok');
       let btn = document.getElementById('btnProsesOpname');
-
-
       if (mode === 'baru') {
         fieldProdukBaru.classList.remove('d-none');
         labelStok.innerText = "Stok Awal*";
@@ -1414,13 +1272,9 @@
         btn.innerText = "📤 Process Stock Opname via Gambar";
       }
     }
-
-
     function prosesPreviewGambar(event) {
       let file = event.target.files[0];
       if (!file) return;
-
-
       let reader = new FileReader();
       reader.onload = function(e) {
         dataGambarBase64 = e.target.result;
@@ -1429,21 +1283,15 @@
       };
       reader.readAsDataURL(file);
     }
-
-
     function prosesSimpanOpnameAtauBarang() {
       let mode = document.getElementById('pilihanAksiOpname').value;
       let kode = document.getElementById('opnameKodeBarang').value.trim();
       let stok = document.getElementById('opnameStokBarang').value;
       let fileInput = document.getElementById('fileGambarOpname');
-
-
       if (!kode || !stok) {
         alert("Kode/Barcode dan Jumlah Stok wajib diisi!");
         return;
       }
-
-
       let objFile = null;
       if (fileInput.files && fileInput.files.length > 0) {
         let file = fileInput.files[0];
@@ -1453,8 +1301,6 @@
           base64Data: dataGambarBase64.split(',')[1]
         };
       }
-
-
       if (mode === 'baru') {
         let nama = document.getElementById('opnameNamaBarang').value.trim();
         let harga = document.getElementById('opnameHargaBarang').value;
@@ -1465,8 +1311,6 @@
           alert("Untuk Produk Baru, Nama dan Harga Jual wajib diisi!");
           return;
         }
-
-
         alert("Sedang mendaftarkan produk baru...");
         google.script.run
           .withSuccessHandler(function(res) {
@@ -1482,8 +1326,6 @@
             alert("Error: " + err.message);
           })
           .tambahBarangBaruDirect(kode, nama, harga, stok, kategori, objFile);
-
-
       } else {
         alert("Sedang memproses update stok...");
         google.script.run
@@ -1514,8 +1356,6 @@
       document.getElementById('previewGambarContainer').classList.add('d-none');
       dataGambarBase64 = "";
     }
-
-
      // Fungsi ketika tombol Silang (X) atau Batal pada Modal Registrasi diklik
 function batalRegistrasi() {
   // Tutup Modal Registrasi
@@ -1524,8 +1364,6 @@ function batalRegistrasi() {
   if (modalReg) {
     modalReg.hide();
   }
-
-
   // Cek apakah user sudah dalam posisi login
   if (userLoginAktif) {
     // Jika sudah login, tetap di halaman web tanpa logout
@@ -1535,8 +1373,6 @@ function batalRegistrasi() {
     bukaModalLogin();
   }
 }
-
-
 // Fungsi Eksekusi Registrasi dengan penambahan Nama & Bagian
 function eksekusiRegistrasi() {
   let nik = document.getElementById('regNik').value.trim();
