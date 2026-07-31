@@ -5,7 +5,62 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Koperasi Digital Pro</title>
- 
+  <script>
+  // ⚠️ GANTI DENGAN URL WEB APP DEPLOYMENT APPS SCRIPT ANDA (Berakhiran /exec)
+  const URL_APPS_SCRIPT_PRO = "https://script.google.com/macros/s/AKfycbxe5OzG2GUrrQOCgg-Zwg3ImkbssU5QJyKlEFAPxbLLTEMCiTBV-7KHXELWOr13cTFn/exec"; 
+
+  window.google = window.google || {};
+  window.google.script = window.google.script || {};
+
+  // Polyfill google.script.run menggunakan Proxy
+  window.google.script.run = (function() {
+    let successCallback = null;
+    let failureCallback = null;
+
+    const runner = {
+      withSuccessHandler: function(handler) {
+        successCallback = handler;
+        return runner;
+      },
+      withFailureHandler: function(handler) {
+        failureCallback = handler;
+        return runner;
+      }
+    };
+
+    return new Proxy(runner, {
+      get: function(target, prop) {
+        if (prop === 'withSuccessHandler') return target.withSuccessHandler;
+        if (prop === 'withFailureHandler') return target.withFailureHandler;
+
+        // Saat fungsi seperti google.script.run.prosesLoginAnggota(nik, pin) dipanggil:
+        return function(...args) {
+          const payload = {
+            namaFungsi: prop,
+            parameter: args
+          };
+
+          fetch(URL_APPS_SCRIPT_PRO, {
+            method: "POST",
+            redirect: "follow", // Wajib agar mengikuti redirect dari Apps Script
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8" // Agar tidak kena CORS Preflight
+            },
+            body: JSON.stringify(payload)
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (successCallback) successCallback(data);
+          })
+          .catch(err => {
+            console.error("Error Fetch Apps Script:", err);
+            if (failureCallback) failureCallback(err);
+          });
+        };
+      }
+    });
+  })();
+</script>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
  
