@@ -281,29 +281,18 @@
       
       <!-- 1. TOMBOL DROPDOWN UTAMA -->
       <li class="nav-item dropdown">
-        <button class="nav-link dropdown-toggle" id="dropdownMenuUtama" data-bs-toggle="dropdown" type="button" aria-expanded="false">
-          ☰ Fitur Menu
-        </button>
-        <ul class="dropdown-menu">
-          <li>
-            <button class="dropdown-item" id="belanja-tab" data-bs-toggle="tab" data-bs-target="#tab-belanja" type="button">Menu Belanja</button>
-          </li>
-          <li>
-            <button class="dropdown-item" id="retur-tab" data-bs-toggle="tab" data-bs-target="#retur" type="button" onclick="bukaMenuRetur()">🔄 Retur</button>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalRegistrasi">🔑 Registrasi PIN Anggota</a>
-          </li>
-          <li><hr class="dropdown-divider"></li>
-          <li>
-            <button class="dropdown-item" id="laporan-tab" data-bs-toggle="tab" data-bs-target="#tab-laporan" type="button" onclick="bukaLaporan()">Laporan Pengurus</button>
-          </li>
-          <li><hr class="dropdown-divider"></li>
-          <li>
-            <a class="dropdown-item text-danger" href="#" onclick="eksekusiLogout()">🚪 Logout / Ganti Akun</a>
-          </li>
-        </ul>
-      </li>
+  <button class="nav-link dropdown-toggle btn border-0 text-white" id="dropdownMenuUtama" data-bs-toggle="dropdown" aria-expanded="false" type="button">
+    ☰ Fitur Menu
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownMenuUtama" style="z-index: 2000;">
+    <li><a class="dropdown-item" href="#" onclick="muatDaftarBarang()"><i class="bi bi-shop me-2"></i>🛒 Katalog Barang</a></li>
+    <li><a class="dropdown-item" href="#" onclick="bukaLaporan()"><i class="bi bi-file-earmark-bar-graph me-2"></i>📊 Laporan Koperasi</a></li>
+    <li><a class="dropdown-item" href="#" onclick="bukaMenuRetur()"><i class="bi bi-arrow-return-left me-2"></i>🔄 Retur Barang</a></li>
+    <li><a class="dropdown-item" href="#" onclick="bukaMenuPengurus()"><i class="bi bi-people me-2"></i>👥 Daftar Pengurus</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item text-danger fw-bold" href="#" onclick="konfirmasiLogout()"><i class="bi bi-box-arrow-right me-2"></i>🚪 Logout Account</a></li>
+  </ul>
+</li>
       <!-- 2. TOMBOL KERANJANG -->
       <li class="nav-item position-relative">
         <button class="nav-link" id="keranjang-menu-tab" data-bs-toggle="tab" data-bs-target="#tab-keranjang" type="button">
