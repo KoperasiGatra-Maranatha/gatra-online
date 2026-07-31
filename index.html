@@ -677,6 +677,77 @@
   </div>
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // URL Web App Deployment Google Apps Script Anda (yang berakhiran /exec)
+    const URL_APPS_SCRIPT_PRO = "https://script.google.com/macros/s/AKfycbxe5OzG2GUrrQOCgg-Zwg3ImkbssU5QJyKlEFAPxbLLTEMCiTBV-7KHXELWOr13cTFn/exec"; 
+
+    window.google = window.google || {};
+    window.google.script = window.google.script || {};
+
+    window.google.script.run = (function() {
+      function executeFetch(namaFungsi, parameter, successCb, failureCb) {
+        fetch(URL_APPS_SCRIPT_PRO, {
+          method: "POST",
+          redirect: "follow",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify({
+            namaFungsi: namaFungsi,
+            parameter: parameter
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.success === false) {
+            if (failureCb) failureCb(new Error(data.message || "Terjadi kesalahan di server"));
+          } else {
+            if (successCb) successCb(data);
+          }
+        })
+        .catch(err => {
+          console.error("Fetch Error:", err);
+          if (failureCb) failureCb(new Error("Gagal mengambil data dari server. Cek koneksi Web App."));
+        });
+      }
+
+      return new Proxy({}, {
+        get: function(target, prop) {
+          if (prop === 'withSuccessHandler') {
+            return function(successCallback) {
+              return {
+                withFailureHandler: function(failureCallback) {
+                  return createRunner(successCallback, failureCallback);
+                },
+                ...createRunner(successCallback, null)
+              };
+            };
+          }
+          if (prop === 'withFailureHandler') {
+            return function(failureCallback) {
+              return {
+                withSuccessHandler: function(successCallback) {
+                  return createRunner(successCallback, failureCallback);
+                },
+                ...createRunner(null, failureCallback)
+              };
+            };
+          }
+          return createRunner(null, null)[prop];
+        }
+      });
+
+      function createRunner(successCb, failureCb) {
+        return new Proxy({}, {
+          get: function(t, fnName) {
+            return function(...args) {
+              executeFetch(fnName, args, successCb, failureCb);
+            };
+          }
+        });
+      }
+    })();
+  </script>
 
 
   <!-- ==================== JAVASCRIPT ==================== -->
