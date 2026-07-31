@@ -434,7 +434,6 @@
             <button class="btn btn-danger" onclick="verifikasiLaporan()">Buka Data</button>
           </div>
         </div>
-
         <!-- Konten Laporan -->
         <div class="row d-none" id="kontenLaporanAsli">
           <div class="col-md-4 mb-3">
@@ -443,7 +442,6 @@
               <h2 class="fw-bold" id="lapPendapatan">Rp 0</h2>
             </div>
           </div>
-          
           <div class="col-md-4 mb-3">
             <div class="card bg-primary text-white p-4 border-0 shadow-sm rounded-3">
               <h6>Jumlah Transaksi (Nota)</h6>
@@ -457,7 +455,6 @@
               <h2 class="fw-bold" id="lapItemTerjual">0 Pcs</h2>
             </div>
           </div>
-
           <!-- Stok Opname & Tambah Barang -->
           <div class="col-12 mt-3">
             <div class="card p-4 border-warning shadow-sm rounded-3">
@@ -503,12 +500,10 @@
                   <input type="file" id="fileGambarOpname" class="form-control" accept="image/*" onchange="prosesPreviewGambar(event)">
                 </div>
               </div>
-
               <div id="previewGambarContainer" class="text-center d-none mb-3">
                 <p class="small text-muted mb-1">Preview Gambar:</p>
                 <img id="previewGambarOpname" src="" alt="Preview" class="img-fluid rounded border" style="max-height: 200px;">
               </div>
-
               <button id="btnProsesOpname" class="btn btn-warning w-100 fw-bold mt-2" onclick="prosesSimpanOpnameAtauBarang()">
                 📤 Process Stock Opname via Gambar
               </button>
@@ -516,7 +511,6 @@
           </div>
         </div>
       </div>
-    
       <!-- ==================== TAB PENGURUS ==================== -->
       <div class="tab-pane fade" id="tab-pengurus">
         <div class="card p-2 shadow-sm border-0 rounded-3 mt-0">
@@ -530,7 +524,6 @@
       
     </div> <!-- End Tab Content -->
   </div> <!-- End Container -->
-
   <!-- ==================== MODAL LOGIN ANGGOTA ==================== -->
   <div class="modal fade" id="modalLogin" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -559,7 +552,6 @@
       </div>
     </div>
   </div>
-
   <!-- ==================== MODAL REGISTRASI ANGGOTA ==================== -->
   <div class="modal fade" id="modalRegistrasi" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
@@ -599,7 +591,6 @@
       </div>
     </div>
   </div>
-
   <!-- ==================== MODAL SUKSES ==================== -->
   <div class="modal fade" id="modalSuksesCustom" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -1342,24 +1333,21 @@
       document.getElementById('previewGambarContainer').classList.add('d-none');
       dataGambarBase64 = "";
     }
-     // Fungsi ketika tombol Silang (X) atau Batal pada Modal Registrasi diklik
+     // ==================== REGISTRASI FUNCTIONS ====================
 function batalRegistrasi() {
-  // Tutup Modal Registrasi
   var modalRegEl = document.getElementById('modalRegistrasi');
   var modalReg = bootstrap.Modal.getInstance(modalRegEl);
   if (modalReg) {
     modalReg.hide();
   }
-  // Cek apakah user sudah dalam posisi login
+  
   if (userLoginAktif) {
-    // Jika sudah login, tetap di halaman web tanpa logout
     terapkanSesiUser();
   } else {
-    // Jika belum login, tampilkan kembali Modal Login
     bukaModalLogin();
   }
 }
-// Fungsi Eksekusi Registrasi dengan penambahan Nama & Bagian
+
 function eksekusiRegistrasi() {
   let nik = document.getElementById('regNik').value.trim();
   let nama = document.getElementById('regNama').value.trim();
@@ -1367,17 +1355,19 @@ function eksekusiRegistrasi() {
   let noHp = document.getElementById('regNoHp').value.trim();
   let pin = document.getElementById('regPin').value.trim();
   let btn = document.getElementById('btnProsesReg');
+
   if (!nik || !nama || !bagian || !noHp || !pin) {
-    alert("Harap isi semua kolom!");
+    alert("Harap isi semua kolom data registrasi!");
     return;
   }
   if (pin.length < 4) {
     alert("PIN minimal terdiri dari 4-6 angka!");
     return;
   }
+
   btn.disabled = true;
   btn.innerText = "Memproses Registrasi...";
-  // Data dikirim lengkap termasuk nama dan bagian
+
   let payload = {
     nik: nik,
     nama: nama,
@@ -1385,31 +1375,41 @@ function eksekusiRegistrasi() {
     noHp: noHp,
     pin: pin
   };
+
   google.script.run
     .withSuccessHandler(function(response) {
       btn.disabled = false;
-      btn.innerText = "Daftar & Buat PIN";
+      btn.innerText = "Daftar Sekarang";
       if (response.success) {
-        alert("🎉 " + response.message);
-        var modalEl = document.getElementById('modalRegistrasi');
-        var modal = bootstrap.Modal.getInstance(modalEl);
-        if (modal) modal.hide();
-        document.getElementById('formRegistrasi').reset();
-        // Langsung buka modal login dan isi NIK otomatis
-        document.getElementById('loginNik').value = nik;
-        bukaModalLogin();
+        alert("🎉 Registrasi Berhasil! Silakan login dengan NIK dan PIN Anda.");
+        batalRegistrasi(); // Tutup modal registrasi & buka modal login
       } else {
-        alert("❌ " + response.message);
+        alert("❌ Registrasi Gagal: " + response.message);
       }
     })
     .withFailureHandler(function(err) {
       btn.disabled = false;
-      btn.innerText = "Daftar & Buat PIN";
-      alert("Terjadi kesalahan koneksi: " + err.message);
+      btn.innerText = "Daftar Sekarang";
+      alert("Error Sistem Registrasi: " + err.message);
     })
     .prosesRegistrasiAnggota(payload);
 }
-  </script>
+
+// ==================== LOGOUT FUNCTIONS ====================
+function konfirmasiLogout() {
+  var modalEl = document.getElementById('modalLogoutConfirm');
+  var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+  modal.show();
+}
+
+function prosesLogoutFinal() {
+  var modalEl = document.getElementById('modalLogoutConfirm');
+  var modal = bootstrap.Modal.getInstance(modalEl);
+  if (modal) modal.hide();
+  
+  eksekusiLogout();
+}
+</script>
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
