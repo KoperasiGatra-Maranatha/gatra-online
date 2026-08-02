@@ -314,17 +314,20 @@
   </nav>
   <!-- ==================== MAIN CONTAINER ==================== -->
   <div class="container">
-    <!-- Nav Tabs -->
+        <!-- Nav Tabs -->
     <ul class="nav nav-tabs mb-4 border-bottom-0" id="menuTab" role="tablist">
-      <!-- 1. TOMBOL DROPDOWN UTAMA -->
+      
+      <!-- TOMBOL UTAMA 1: MENU BELANJA (SEKARANG BERDIRI SENDIRI, AMAN 100%) -->
+      <li class="nav-item">
+        <button class="nav-link active" id="belanja-tab" data-bs-toggle="tab" data-bs-target="#tab-belanja" type="button">🛒 Menu Belanja</button>
+      </li>
+
+      <!-- TOMBOL UTAMA 2: DROPDOWN FITUR LAINNYA (TIDAK AKAN TERBUKA OTOMATIS LAGI) -->
       <li class="nav-item dropdown">
         <button class="nav-link dropdown-toggle" id="dropdownMenuUtama" data-bs-toggle="dropdown" type="button" aria-expanded="false">
-          ☰ Fitur Menu
+          ☰ Fitur Lain
         </button>
         <ul class="dropdown-menu">
-          <li>
-            <button class="dropdown-item" id="belanja-tab" data-bs-toggle="tab" data-bs-target="#tab-belanja" type="button">Menu Belanja</button>
-          </li>
           <li>
             <button class="dropdown-item" id="retur-tab" data-bs-toggle="tab" data-bs-target="#retur" type="button" onclick="bukaMenuRetur()">🔄 Retur</button>
           </li>
@@ -341,16 +344,24 @@
           </li>
         </ul>
       </li>
-      <!-- 2. TOMBOL KERANJANG -->
+
+      <!-- TOMBOL UTAMA 3: KERANJANG -->
       <li class="nav-item position-relative">
-        <button class="nav-link" id="keranjang-menu-tab" data-bs-toggle="tab" data-bs-target="#tab-keranjang" type="button">
-          🛒 <span id="notifKeranjang" class="badge bg-danger position-absolute top-0 start-50 translate-middle rounded-pill d-none" style="font-size: 10px; padding: 3px 6px;">0</span>
+        <button class="nav-link" id="keranjang-menu-tab" data-bs-toggle="tab" data-bs-target="#tab-keranjang" type="button" onclick="bukaMenuKeranjang()">
+          🛍️ Keranjang <span id="notifKeranjang" class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill d-none" style="font-size: 10px; padding: 3px 6px;">0</span>
         </button>
       </li>
-      <!-- 3. TOMBOL PENGURUS -->
+
+      <!-- TOMBOL UTAMA 4: PENGURUS -->
       <li class="nav-item">
         <button class="nav-link" id="pengurus-tab" data-bs-toggle="tab" data-bs-target="#tab-pengurus" type="button" onclick="bukaMenuPengurus()">👥 Pengurus</button>
       </li>
+
+      <!-- TOMBOL UTAMA 5: KREDIT MOTOR -->
+      <li class="nav-item">
+        <button class="nav-link" id="kredit-tab" data-bs-toggle="tab" data-bs-target="#tab-kredit" type="button">🏍️ Kredit Motor</button>
+      </li>
+
     </ul>
     <!-- Tab Content -->
     <div class="tab-content">
