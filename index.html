@@ -221,12 +221,14 @@
     .dropdown-item:hover {
       background-color: #f8f9fa !important;
       color: #006A4E !important; 
-    }
-  </style>
+    }  </style>
+
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#006A4E">
 </head>
 <body>
 
-<!-- 4. POLYFILL GOOGLE SCRIPT RUN -->
+  <!-- 4. POLYFILL GOOGLE SCRIPT RUN -->
   <script>
     const URL_APPS_SCRIPT_PRO = "https://script.google.com/macros/s/AKfycbxe5OzG2GUrrQOCgg-Zwg3ImkbssU5QJyKlEFAPxbLLTEMCiTBV-7KHXELWOr13cTFn/exec"; 
     window.google = window.google || {};
@@ -294,8 +296,6 @@
       }
     })();
   </script>
-</head>
-<body>
 
   <!-- ==================== NAVBAR ==================== -->
   <nav class="navbar navbar-dark bg-success mb-3 shadow-sm">
@@ -1542,6 +1542,14 @@ function eksekusiRegistrasi() {
     })
     .prosesRegistrasiAnggota(payload);
 }
+  </script>
+    <!-- Script Pemicu Tombol Instal Aplikasi di Browser HP -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js')
+        .then(function() { console.log('Aplikasi Gatra Online Siap Diinstal!'); })
+        .catch(function(err) { console.log('Gagal mengaktifkan fitur download:', err); });
+    }
   </script>
 </body>
 </html>
