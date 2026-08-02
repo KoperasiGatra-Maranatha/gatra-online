@@ -791,6 +791,35 @@
         .getDaftarBarang();
     }
 
+    // ==================== PENGURUS FUNCTIONS ====================
+    function bukaMenuPengurus() {
+      document.getElementById('containerDaftarPengurus').innerHTML = '<div class="text-center text-muted p-3">Memuat data pengurus...</div>';
+     
+      google.script.run
+        .withSuccessHandler(function(data) {
+          let html = '';
+          if (!data || data.length === 0) {
+            html = '<div class="alert alert-warning text-center">Belum ada data pengurus di Spreadsheet.</div>';
+          } else {
+            data.forEach(p => {
+              html += `
+                <div class="list-group-item d-flex justify-content-between align-items-center py-3 border-start-0 border-end-0">
+                  <div>
+                    <h6 class="fw-bold text-dark mb-0">${p.nama}</h6>
+                  </div>
+                  <span class="badge bg-primary rounded-pill px-3 py-2">${p.jabatan}</span>
+                </div>`;
+            });
+          }
+          document.getElementById('containerDaftarPengurus').innerHTML = html;
+        })
+        .withFailureHandler(function(err) {
+          document.getElementById('containerDaftarPengurus').innerHTML = `<div class="alert alert-danger text-center">Gagal memuat: ${err.message}</div>`;
+        })
+        .getDaftarPengurusLengkap();
+    }
+
+    
     function tampilkanKatalog(barang) {
       let html = '';
       if (!barang || barang.length === 0) {
@@ -1260,19 +1289,15 @@
       }
     }
 
-
     function simpanReturKeSistem() {
       let kode = document.getElementById('returKodeBarang').value;
       let qty = document.getElementById('returQty').value;
       let jenis = document.getElementById('returJenis').value;
       let alasan = document.getElementById('returAlasan').value;
-
-
       if (!kode || !qty || !alasan) {
         alert("Mohon isi semua kolom data retur!");
         return;
       }
-
 
       if (confirm(`Apakah Anda yakin ingin memproses retur barang ini?`)) {
         google.script.run
@@ -1288,34 +1313,6 @@
           })
           .prosesReturBarang(kode, qty, alasan, jenis);
       }
-    }
-
-    // ==================== PENGURUS FUNCTIONS ====================
-    function bukaMenuPengurus() {
-      document.getElementById('containerDaftarPengurus').innerHTML = '<div class="text-center text-muted p-3">Memuat data pengurus...</div>';
-     
-      google.script.run
-        .withSuccessHandler(function(data) {
-          let html = '';
-          if (!data || data.length === 0) {
-            html = '<div class="alert alert-warning text-center">Belum ada data pengurus di Spreadsheet.</div>';
-          } else {
-            data.forEach(p => {
-              html += `
-                <div class="list-group-item d-flex justify-content-between align-items-center py-3 border-start-0 border-end-0">
-                  <div>
-                    <h6 class="fw-bold text-dark mb-0">${p.nama}</h6>
-                  </div>
-                  <span class="badge bg-primary rounded-pill px-3 py-2">${p.jabatan}</span>
-                </div>`;
-            });
-          }
-          document.getElementById('containerDaftarPengurus').innerHTML = html;
-        })
-        .withFailureHandler(function(err) {
-          document.getElementById('containerDaftarPengurus').innerHTML = `<div class="alert alert-danger text-center">Gagal memuat: ${err.message}</div>`;
-        })
-        .getDaftarPengurusLengkap();
     }
     
     // ==================== OPNAME & TAMBAH BARANG FUNCTIONS ====================
