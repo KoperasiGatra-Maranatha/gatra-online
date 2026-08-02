@@ -15,7 +15,8 @@
       "purpose": "any"
     }
    ],
-  "start_url": "./Index.html",
+ "start_url": "/gatra-online/Index.html",
+  "scope": "/gatra-online/",
   "background_color": "#006A4E",
   "theme_color": "#006A4E",
   "display": "standalone",
