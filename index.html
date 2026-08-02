@@ -1550,6 +1550,16 @@ function eksekusiRegistrasi() {
         .then(function() { console.log('Aplikasi Gatra Online Siap Diinstal!'); })
         .catch(function(err) { console.log('Gagal mengaktifkan fitur download:', err); });
     }
+    // Mengunci sinkronisasi data Pengurus agar dipanggil tepat setelah animasi tab Bootstrap selesai 100%
+document.addEventListener("DOMContentLoaded", function() {
+  const tabPengurusEl = document.getElementById('pengurus-tab');
+  if (tabPengurusEl) {
+    tabPengurusEl.addEventListener('shown.bs.tab', function () {
+      bukaMenuPengurus(); // Dipicu secara instan setelah halaman tab terbuka penuh di layar HP
+    });
+  }
+});
+
   </script>
 </body>
 </html>
