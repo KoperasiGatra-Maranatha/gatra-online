@@ -20,7 +20,7 @@
       padding: 0; 
     }
     
-    .container { 
+    .container {
       padding-left: 8px !important; 
       padding-right: 8px !important; 
     }
@@ -791,7 +791,6 @@
         .getDaftarBarang();
     }
 
-
     function tampilkanKatalog(barang) {
       let html = '';
       if (!barang || barang.length === 0) {
@@ -1291,7 +1290,6 @@
       }
     }
 
-
     // ==================== PENGURUS FUNCTIONS ====================
     function bukaMenuPengurus() {
       document.getElementById('containerDaftarPengurus').innerHTML = '<div class="text-center text-muted p-3">Memuat data pengurus...</div>';
@@ -1319,14 +1317,13 @@
         })
         .getDaftarPengurusLengkap();
     }
+    
     // ==================== OPNAME & TAMBAH BARANG FUNCTIONS ====================
     function toggleModeOpname() {
       let mode = document.getElementById('pilihanAksiOpname').value;
       let fieldProdukBaru = document.getElementById('fieldProdukBaru');
       let labelStok = document.getElementById('labelStok');
       let btn = document.getElementById('btnProsesOpname');
-
-
       if (mode === 'baru') {
         fieldProdukBaru.classList.remove('d-none');
         labelStok.innerText = "Stok Awal*";
