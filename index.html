@@ -818,7 +818,14 @@
         })
         .getDaftarPengurusLengkap();
     }
+function bukaMenuKeranjang() {
+      // Cukup scroll ke atas dan perbarui UI Keranjang jika ada
+      window.scrollTo({ top: 0, behavior: 'smooth' });
 
+      if (typeof updateKeranjangUI === 'function') {
+        updateKeranjangUI();
+      }
+    }
     
     function tampilkanKatalog(barang) {
       let html = '';
