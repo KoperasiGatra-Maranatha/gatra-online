@@ -689,24 +689,30 @@
       let nik = document.getElementById('loginNik').value.trim();
       let pin = document.getElementById('loginPin').value.trim();
       let btn = document.getElementById('btnProsesLogin');
+
       if (!nik || !pin) {
         alert("NIK dan PIN wajib diisi!");
         return;
       }
+
       btn.disabled = true;
       btn.innerText = "Memverifikasi...";
+
       google.script.run
         .withSuccessHandler(function(response) {
           btn.disabled = false;
           btn.innerText = "Masuk ke Aplikasi";
+
           if (response.success) {
             userLoginAktif = response.user;
             // Simpan sesi login di memori browser
             localStorage.setItem("gatra_user_session", JSON.stringify(userLoginAktif));
+            
             // Tutup modal login
             var modalEl = document.getElementById('modalLogin');
             var modal = bootstrap.Modal.getInstance(modalEl);
             if (modal) modal.hide();
+
             terapkanSesiUser();
             alert("🎉 " + response.message + "\nSelamat datang, " + response.user.nama);
           } else {
@@ -720,7 +726,7 @@
         })
         .prosesLoginAnggota(nik, pin);
     }
-
+    
     function terapkanSesiUser() {
       // KODE SETTIMEOUT SUDAH DIHAPUS TOTAL DARI SINI
       
