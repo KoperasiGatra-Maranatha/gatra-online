@@ -13,147 +13,191 @@
  
   <style>
     /* ==================== BASE STYLES ==================== */
-    body {
-      background-color: #e8f5e9;
-      font-size: 14px;
-      margin: 0;
-      padding: 0;
+    body { 
+      background-color: #006A4E; /* Hijau Botol Utama */
+      font-size: 14px; 
+      margin: 0; 
+      padding: 0; 
     }
-    .container {
-      padding-left: 8px !important;
-      padding-right: 8px !important;
+    
+    .container { 
+      padding-left: 8px !important; 
+      padding-right: 8px !important; 
     }
-   
+    
     /* ==================== KATALOG BARANG ==================== */
-    #katalog {
-      display: flex;
-      flex-wrap: wrap;
-      margin-left: -4px !important;
-      margin-right: -4px !important;
+    #katalog { 
+      display: flex; 
+      flex-wrap: wrap; 
+      margin-left: -4px !important; 
+      margin-right: -4px !important; 
     }
-    .col-barang {
-      padding-left: 4px !important;
-      padding-right: 4px !important;
+    
+    .col-barang { 
+      padding-left: 4px !important; 
+      padding-right: 4px !important; 
       margin-bottom: 8px !important;
       box-sizing: border-box;
     }
-    .card-barang {
-      border-radius: 8px !important;
+
+    .card-barang { 
+      border-radius: 8px !important; 
       border: 1px solid #e0e0e0 !important;
       overflow: hidden;
       background: #ffffff;
     }
-    .card-body {
-      padding: 8px !important;
+    
+    .card-body { 
+      padding: 8px !important; 
     }
+    
     .card-title {
-      font-size: 14px !important;
+      font-size: 14px !important; 
       font-weight: bold;
       line-height: 1.2;
-      height: 34px;
+      height: 34px; 
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
       margin-bottom: 4px !important;
     }
-   
+    
     .card-text {
-      font-size: 15px !important;
-      color: #dc3545 !important;
+      font-size: 15px !important; 
+      color: #dc3545 !important; /* Warna harga tetap merah agar mencolok */
       font-weight: bold;
       margin-bottom: 2px !important;
     }
-    .stok-text {
-      font-size: 11px !important;
-      color: #6c757d;
-      margin-bottom: 6px;
+    
+    .stok-text { 
+      font-size: 11px !important; 
+      color: #6c757d; 
+      margin-bottom: 6px; 
     }
+    
+    /* Mengubah warna tombol beli di setiap barang jualan menjadi hijau botol */
     .card-barang .btn {
       padding: 6px;
       font-size: 13px;
       font-weight: bold;
       border-radius: 6px;
-    }
-    /* ==================== KERANJANG ==================== */
-    #keranjang .list-group-item {
-      font-size: 15px !important;
-      padding: 10px 12px;
-    }
-    #keranjang b {
-      font-size: 15px;
-    }
-    /* ==================== NAV TABS ==================== */
-    .nav-tabs .nav-link {
-      color: #555;
-      font-weight: bold;
-      font-size: 18px !important;
-      padding: 12px 14px !important;
-    }
-   
-    .nav-tabs .nav-link.active {
-      color: #198754;
-      font-weight: bold;
-      border-bottom: 3px solid #198754 !important;
+      background-color: #006A4E !important;
+      border-color: #006A4E !important;
+      color: #ffffff !important;
     }
 
+    .card-barang .btn:hover {
+      background-color: #004D38 !important; /* Efek gelap saat tombol disentuh */
+      border-color: #004D38 !important;
+    }
+
+    /* Mengubah warna bawaan tombol utama Bootstrap (.btn-primary) ke hijau botol */
+    .btn-primary {
+      background-color: #006A4E !important;
+      border-color: #006A4E !important;
+      color: #ffffff !important;
+    }
+    
+    .btn-primary:hover {
+      background-color: #004D38 !important;
+      border-color: #004D38 !important;
+    }
+
+    /* ==================== KERANJANG ==================== */
+    #keranjang .list-group-item { 
+      font-size: 15px !important; 
+      padding: 10px 12px; 
+    }
+    
+    #keranjang b { 
+      font-size: 15px; 
+    }
+    
+    /* ==================== NAV TABS ==================== */
+    /* Warna latar belakang tab menu utama diubah putih agar kontras dengan background body hijau */
+    #menuTab {
+      background-color: #ffffff !important;
+      border-radius: 8px !important;
+      padding: 4px !important;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+    }
+
+    .nav-tabs .nav-link { 
+      color: #555; 
+      font-weight: bold; 
+      font-size: 18px !important;
+      padding: 12px 14px !important; 
+      border: none !important;
+    }
+    
+    /* Mengubah warna teks aktif & garis bawah menu menjadi hijau botol */
+    .nav-tabs .nav-link.active { 
+      color: #006A4E !important; 
+      font-weight: bold; 
+      border-bottom: 3px solid #006A4E !important; 
+      background: none !important;
+    }
 
     #keranjang-menu-tab {
       font-size: 22px !important;
     }
 
-
+    /* Badge notifikasi angka di keranjang menggunakan warna kuning agar tidak mati tenggelam di warna hijau */
     #notifKeranjang {
       font-size: 11px !important;
       padding: 4px 7px !important;
       top: 5px !important;
+      background-color: #ffc107 !important;
+      color: #212529 !important;
     }
-
 
     /* ========================================================== */
     /* KHUSUS UNTUK TAMPILAN HP (Layar di bawah 768px)            */
     /* ========================================================== */
     @media (max-width: 767px) {
       .col-barang {
-        width: 33.33% !important;
+        width: 33.33% !important; 
         flex: 0 0 33.33% !important;
         max-width: 33.33% !important;
       }
-      .card-barang img {
+      .card-barang img { 
         width: 100% !important;
-        height: 130px !important;
-        object-fit: contain !important;
+        height: 130px !important; 
+        object-fit: contain !important; 
         background-color: #f8f9fa;
       }
+
       .nav-tabs .nav-link {
-        font-size: 14px !important;
-        padding: 8px 10px !important;
-        white-space: nowrap !important;
+        font-size: 14px !important; 
+        padding: 8px 10px !important; 
+        white-space: nowrap !important; 
       }
+      
       #menuTab {
         display: flex !important;
-        justify-content: space-between !important;
+        justify-content: space-between !important; 
         align-items: center !important;
         width: 100% !important;
       }
     }
+
     /* ========================================================== */
     /* KHUSUS UNTUK TAMPILAN LAPTOP (Layar 768px ke atas)         */
     /* ========================================================== */
     @media (min-width: 768px) {
-      .col-barang {
-        width: 22% !important;
-        flex: 0 0 22% !important;
-        max-width: 22% !important;
+      .col-barang { 
+        width: 22% !important; 
+        flex: 0 0 22% !important; 
+        max-width: 22% !important; 
       }
-      .card-barang img {
+      .card-barang img { 
         width: 100% !important;
-        height: 260px !important;
+        height: 260px !important; 
         object-fit: contain !important;
         background-color: #f8f9fa;
       }
     }
-
 
     /* Styling khusus dropdown menu */
     .dropdown-menu {
@@ -161,7 +205,7 @@
       border: 1px solid #e0e0e0 !important;
       box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     }
-   
+    
     .dropdown-item {
       font-size: 16px !important;
       color: #555 !important;
@@ -172,11 +216,15 @@
       width: 100%;
       text-align: left;
     }
+
+    /* Efek sorot pilihan di dalam dropdown diubah menjadi hijau botol */
     .dropdown-item:hover {
       background-color: #f8f9fa !important;
-      color: #198754 !important;
+      color: #006A4E !important; 
     }
   </style>
+</head>
+<body>
 
 <!-- 4. POLYFILL GOOGLE SCRIPT RUN -->
   <script>
