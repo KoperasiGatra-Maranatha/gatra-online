@@ -722,11 +722,12 @@
     }
 
     function terapkanSesiUser() {
+      // KODE SETTIMEOUT SUDAH DIHAPUS TOTAL DARI SINI
+      
       if (userLoginAktif) {
         // Tampilkan info akun di Navbar
         document.getElementById('badgeUserLogin').innerHTML = "👤 " + userLoginAktif.nama;
         document.getElementById('badgeUserLogin').className = "badge bg-warning text-dark fw-bold py-2";
-
 
         // Isikan otomatis ke kolom NIK Kasir / Keranjang
         let inputNikKasir = document.getElementById('nikPembeli');
@@ -736,7 +737,6 @@
         }
       }
     }
-
 
    function eksekusiLogout() {
   localStorage.removeItem("gatra_user_session");
