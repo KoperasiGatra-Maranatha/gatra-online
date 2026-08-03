@@ -510,16 +510,19 @@
       </div>
       <!-- ==================== TAB LAPORAN ==================== -->
       <div class="tab-pane fade" id="tab-laporan">
-        <!-- Proteksi PIN -->
-        <div class="card p-4 border-0 shadow-sm rounded-3" id="boxProteksiLaporan">
-          <h5 class="text-danger fw-bold mb-3">🔒 Verifikasi Pengurus</h5>
-          <p class="text-muted small">Masukkan PIN Pengurus untuk dapat melihat data keuangan koperasi.</p>
-          <div class="input-group" style="max-width: 300px;">
-            <input type="password" id="pinPengurusInput" class="form-control" placeholder="Masukkan PIN Anda...">
-            <button class="btn btn-danger" onclick="verifikasiLaporan()">Buka Data</button>
+        <div class="p-3">
+          
+          <!-- 1. KOTAK PROTEKSI PIN (SELALU MUNCUL PERTAMA KALI) -->
+          <div id="boxProteksiLaporan" class="card p-4 border-0 shadow-sm rounded-3 mb-3">
+            <h5 class="text-danger fw-bold mb-3">🔒 Verifikasi Pengurus</h5>
+            <p class="text-muted small">Masukkan PIN Pengurus untuk dapat melihat data keuangan koperasi.</p>
+            <div class="input-group" style="max-width: 300px;">
+              <input type="password" id="pinPengurusInput" class="form-control" placeholder="Masukkan PIN Anda...">
+              <button class="btn btn-danger fw-bold" onclick="verifikasiLaporan()">Buka Data</button>
+            </div>
           </div>
-        </div>
-        <!-- Konten Laporan -->
+          
+          <!-- Konten Laporan -->
         <div class="row d-none" id="kontenLaporanAsli">
           <div class="col-md-4 mb-3">
             <div class="card bg-success text-white p-4 border-0 shadow-sm rounded-3">
@@ -527,18 +530,21 @@
               <h2 class="fw-bold" id="lapPendapatan">Rp 0</h2>
             </div>
           </div>
+          
           <div class="col-md-4 mb-3">
             <div class="card bg-primary text-white p-4 border-0 shadow-sm rounded-3">
               <h6>Jumlah Transaksi (Nota)</h6>
               <h2 class="fw-bold" id="lapTransaksi">0 Transaksi</h2>
             </div>
           </div>
+          
           div class="col-md-4 mb-3">
             <div class="card bg-info text-white p-4 border-0 shadow-sm rounded-3">
               <h6>Total Produk Terjual</h6>
               <h2 class="fw-bold" id="lapItemTerjual">0 Pcs</h2>
             </div>
           </div>
+          
           <!-- Stok Opname & Tambah Barang -->
           <div class="col-12 mt-3">
             <div class="card p-4 border-warning shadow-sm rounded-3">
