@@ -976,8 +976,6 @@ function bukaMenuKeranjang() {
         })
         .validasiAnggota(nik);
     }
-
-
     // ==================== KERANJANG FUNCTIONS ====================
     function tambahKeKeranjang(kode) {
       let barang = semuaBarang.find(b => b.kode == kode);
@@ -998,8 +996,6 @@ function bukaMenuKeranjang() {
         alert("Stok habis!");
       }
     }
-
-
     function updateKeranjangUI() {
       let html = '';
       let total = 0;
@@ -1011,14 +1007,10 @@ function bukaMenuKeranjang() {
         document.getElementById('notifKeranjang').classList.add('d-none');
         return;
       }
-
-
       keranjang.forEach((item, index) => {
         let subtotal = item.harga * item.qty;
         total += subtotal;
         totalItem += item.qty;
-
-
         html += `
           <li class="list-group-item d-flex justify-content-between align-items-center">
             <div>
@@ -1032,10 +1024,7 @@ function bukaMenuKeranjang() {
             </div>
           </li>`;
       });
-
-
       document.getElementById('keranjang').innerHTML = html;
-     
       let infoNotif = document.getElementById('notifKeranjang');
       if (totalItem > 0) {
         infoNotif.innerText = totalItem;
@@ -1044,8 +1033,6 @@ function bukaMenuKeranjang() {
         infoNotif.classList.add('d-none');
       }
     }
-
-
     function tambahKeranjangLagi(idx) {
       let barangAsli = semuaBarang.find(b => b.kode == keranjang[idx].kode);
       if (barangAsli && barangAsli.stok > keranjang[idx].qty) {
@@ -1055,8 +1042,6 @@ function bukaMenuKeranjang() {
         alert("Stok barang di toko tidak mencukupi!");
       }
     }
-
-
     function kurangiKeranjang(idx) {
       if (keranjang[idx].qty > 1) {
         keranjang[idx].qty--;
@@ -1065,8 +1050,6 @@ function bukaMenuKeranjang() {
       }
       updateKeranjangUI();
     }
-
-
     // ==================== BARCODE SCANNER FUNCTIONS ====================
     function scanBarangManual() {
       let kode = document.getElementById('barcodeInput').value.toString().trim();
@@ -1084,8 +1067,6 @@ function bukaMenuKeranjang() {
         document.getElementById('barcodeInput').value = '';
       }
     }
-
-
     function toggleKameraHP() {
       let areaCam = document.getElementById('reader');
       if (!areaCam) return;
@@ -1101,7 +1082,6 @@ function bukaMenuKeranjang() {
           qrbox: 250,
           supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
         });
-       
         html5QrcodeScanner.render((decodedText) => {
           let kodeScan = decodedText.toString().trim();
          
@@ -1109,8 +1089,6 @@ function bukaMenuKeranjang() {
             (item.barcode && item.barcode.toString().trim() === kodeScan) ||
             (item.kode && item.kode.toString().trim() === kodeScan)
           );
-
-
           if (produk) {
             if (Number(produk.stok) <= 0) {
               alert("⚠️ Maaf, Stok untuk barang '" + produk.nama + "' sudah habis!");
@@ -1129,31 +1107,24 @@ function bukaMenuKeranjang() {
         });
       }
     }
-
-
     // ==================== CHECKOUT FUNCTIONS ====================
     function checkout() {
       if (keranjang.length === 0) {
         alert("Keranjang masih kosong!");
         return;
       }
-     
       let nikInputElement = document.getElementById('nikPembeli');
       let nik = nikInputElement.value;
       if (!nik) {
         alert("Silakan masukkan NIK Pembeli terlebih dahulu!");
         return;
       }
-
-
       let pinInputElement = document.getElementById('pinPembeli');
       let pin = pinInputElement.value;
       if (!pin) {
         alert("❌ Transaksi Ditolak: Anda wajib memasukkan PIN Transaksi!");
         return;
       }
-
-
       let elemenNama = document.getElementById('namaAnggota').innerText;
      
       if (!elemenNama || elemenNama.includes("🔴") || elemenNama.includes("Memeriksa") || elemenNama.trim() === "") {
@@ -1165,15 +1136,11 @@ function bukaMenuKeranjang() {
         document.getElementById('box-pin').classList.add('d-none');
         keranjang = [];
         updateKeranjangUI();
-       
         return;
       }
-
-
       prosesSimpanTransaksiKeSheets(nik, "Umum");
     }
-
-
+    
     function prosesSimpanTransaksiKeSheets(nik, namaPengurusAktif) {
       let elemenNama = document.getElementById('namaAnggota').innerText;
       let namaAsliPembeli = "Pelanggan";
@@ -1181,20 +1148,14 @@ function bukaMenuKeranjang() {
       if (elemenNama && !elemenNama.includes("🔴") && !elemenNama.includes("Memeriksa")) {
         namaAsliPembeli = elemenNama.replace("🟢", "").replace("🔴", "").trim();
       }
-
-
       let pinInputElement = document.getElementById('pinPembeli');
       let pinInputan = pinInputElement ? pinInputElement.value : "";
-
-
       let total = 0;
       let teksDaftarBarang = "";
       keranjang.forEach(item => {
         total += (item.harga * item.qty);
         teksDaftarBarang += `- ${item.nama} (${item.qty}x) = Rp ${(item.harga * item.qty).toLocaleString('id-ID')}\n`;
       });
-
-
       let dataTransaksi = {
         nik: nik,
         pin: pinInputan,
@@ -1203,37 +1164,25 @@ function bukaMenuKeranjang() {
         keranjang: keranjang,
         pengurus: namaPengurusAktif
       };
-
-
       document.getElementById('namaAnggota').innerText = "Memproses Transaksi...";
       document.getElementById('areaNotaSukses').classList.add('d-none');
-
-
       google.script.run
         .withSuccessHandler(function(response) {
           if (response.success) {
             var myModal = new bootstrap.Modal(document.getElementById('modalSuksesCustom'));
-            myModal.show();
-           
+            myModal.show();       
             document.getElementById('areaNotaSukses').classList.remove('d-none');
-           
             let nomorTujuan = noHpPembeliAktif ? noHpPembeliAktif : "628XXXXXXXXXX";
             if (nomorTujuan.startsWith("0")) nomorTujuan = "62" + nomorTujuan.slice(1);
             nomorTujuan = nomorTujuan.replace(/[- ]/g, '');
-
-
             let pesanFormat = `*KOPERASI GATRA MARANATHA*\n=========================\n*No Nota:* ${response.noNota}\n*Pembeli:* ${namaAsliPembeli}\n=========================\n${teksDaftarBarang}=========================\n*Total Bayar:* Rp ${total.toLocaleString('id-ID')}\n\nTerima kasih atas kunjungan Anda!`;
             let urlWhatsApp = "https://wa.me/" + nomorTujuan + "?text=" + encodeURIComponent(pesanFormat);
-           
             let tombolMerah = document.getElementById('linkDownloadPdf');
             if (tombolMerah) tombolMerah.setAttribute("onclick", `window.open('${urlWhatsApp}', '_blank')`);
-
-
             // Reset Keranjang & Form
             keranjang = [];
             updateKeranjangUI();
             if (pinInputElement) pinInputElement.value = '';
-           
             // Jaga NIK tetap ada jika user ter-login
             if (userLoginAktif) {
               document.getElementById('nikPembeli').value = userLoginAktif.nik;
@@ -1243,8 +1192,6 @@ function bukaMenuKeranjang() {
               document.getElementById('box-pin').classList.add('d-none');
               document.getElementById('namaAnggota').innerText = '';
             }
-
-
             muatDaftarBarang();
           } else {
             alert(response.message);
@@ -1257,65 +1204,73 @@ function bukaMenuKeranjang() {
         })
         .simpanNotaKeSpreadsheet(dataTransaksi);
     }
+    
+    // ==================== FUNGSI BUKA LAPORAN ====================
+function bukaLaporan() {
+  // 1. Kunci kembali konten laporan (Sembunyikan data sensitif)
+  let kontenLaporan = document.getElementById('kontenLaporanAsli');
+  if (kontenLaporan) {
+    kontenLaporan.classList.add('d-none');
+  }
+  // 2. Tampilkan kembali Box Input PIN Proteksi
+  let boxProteksi = document.getElementById('boxProteksiLaporan');
+  if (boxProteksi) {
+    boxProteksi.classList.remove('d-none');
+  }
+  // 3. Kosongkan input PIN lama jika ada
+  let inputPin = document.getElementById('pinPengurusInput');
+  if (inputPin) {
+    inputPin.value = '';
+  }
+  // 4. Scroll layar ke paling atas
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+  // ==================== FUNGSI VERIFIKASI PIN LAPORAN ====================
+function verifikasiLaporan() {
+  let pinInput = document.getElementById('pinPengurusInput').value.trim();
 
+  if (!pinInput) {
+    alert("⚠️ Masukkan PIN Pengurus terlebih dahulu!");
+    return;
+  }
 
-    // ==================== LAPORAN FUNCTIONS ====================
-    function bukaLaporan() {
-      document.getElementById('boxProteksiLaporan').classList.remove('d-none');
-      document.getElementById('kontenLaporanAsli').classList.add('d-none');
-      document.getElementById('pinPengurusInput').value = '';
-    }
+  // Panggil fungsi Apps Script untuk verifikasi PIN ke Spreadsheet / Server
+  google.script.run
+    .withSuccessHandler(function(response) {
+      // Jika response dari server menyatakan PIN valid (misal: response.success === true atau response === true)
+      if (response && (response.success || response === true)) {
+        
+        // Sembunyikan Box Proteksi PIN
+        document.getElementById('boxProteksiLaporan').classList.add('d-none');
+        
+        // Munculkan Konten Laporan Keuangan
+        document.getElementById('kontenLaporanAsli').classList.remove('d-none');
 
-
-    function verifikasiLaporan() {
-      let pin = document.getElementById('pinPengurusInput').value;
-      if (!pin) {
-        alert("PIN tidak boleh kosong!");
-        return;
+        // Panggil fungsi untuk mengambil angka pendapatan/transaksi dari server
+        muatDataKeuanganLaporan(); 
+        
+      } else {
+        alert("❌ PIN Pengurus salah! Akses ditolak.");
+        document.getElementById('pinPengurusInput').value = '';
       }
-
-
-      google.script.run
-        .withSuccessHandler(function(hasilValidasi) {
-          if (hasilValidasi.success) {
-            document.getElementById('boxProteksiLaporan').classList.add('d-none');
-            document.getElementById('kontenLaporanAsli').classList.remove('d-none');
-           
-            google.script.run
-              .withSuccessHandler(data => {
-                document.getElementById('lapPendapatan').innerText = "Rp " + data.totalPendapatan.toLocaleString('id-ID');
-                document.getElementById('lapTransaksi').innerText = data.totalTransaksi + " Transaksi";
-                document.getElementById('lapItemTerjual').innerText = data.totalItemTerjual + " Pcs";
-              })
-              .getLaporanKoperasi();
-           
-          } else {
-            alert(hasilValidasi.message);
-          }
-        })
-        .withFailureHandler(err => {
-          alert("Gagal koneksi: " + err.message);
-        })
-        .validasiPinPengurusSistemDirect(pin);
-    }
-
-
+    })
+    .withFailureHandler(function(err) {
+      alert("Gagal memverifikasi PIN: " + err.message);
+    })
+    .cekPinPengurus(pinInput); // Sesuai dengan nama fungsi di Code.gs Anda
+}  
     // ==================== RETUR FUNCTIONS ====================
     function bukaMenuRetur() {
       document.getElementById('boxProteksiRetur').classList.remove('d-none');
       document.getElementById('kontenReturAsli').classList.add('d-none');
       document.getElementById('pinReturInput').value = '';
     }
-
-
     function verifikasiRetur() {
       let pin = document.getElementById('pinReturInput').value;
       if (!pin) {
         alert("PIN tidak boleh kosong!");
         return;
       }
-
-
       google.script.run
         .withSuccessHandler(function(hasilValidasi) {
           if (hasilValidasi.success) {
@@ -1330,8 +1285,7 @@ function bukaMenuKeranjang() {
         })
         .validasiPinPengurusSistemDirect(pin);
     }
-
-
+    
     function toggleKameraRetur() {
       let areaCam = document.getElementById('readerRetur');
       if (areaCam.style.display === 'block') {
@@ -1347,7 +1301,6 @@ function bukaMenuKeranjang() {
         });
       }
     }
-
     function simpanReturKeSistem() {
       let kode = document.getElementById('returKodeBarang').value;
       let qty = document.getElementById('returQty').value;
@@ -1464,7 +1417,6 @@ function bukaMenuKeranjang() {
           .prosesOpnameDenganGambarDirect(kode, stok, objFile);
       }
     }
-
     function resetFormOpname() {
       document.getElementById('opnameKodeBarang').value = '';
       document.getElementById('opnameStokBarang').value = '';
@@ -1492,7 +1444,6 @@ function batalRegistrasi() {
     bukaModalLogin();
   }
 }
-
 // Fungsi Eksekusi Registrasi dengan penambahan Nama & Bagian
 function eksekusiRegistrasi() {
   let nik = document.getElementById('regNik').value.trim();
@@ -1560,7 +1511,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 });
-
   </script>
 </body>
 </html>
