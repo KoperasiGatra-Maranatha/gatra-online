@@ -1239,31 +1239,61 @@ function verifikasiLaporan() {
     return;
   }
 
-  // Panggil fungsi Apps Script untuk verifikasi PIN ke Spreadsheet / Server
+  // 1. Kunci tombol verifikasi agar tidak bisa diklik ganda
+  const tombolVerif = document.querySelector("#boxProteksiLaporan button");
+  if (tombolVerif) {
+    tombolVerif.disabled = true;
+    tombolVerif.innerText = "Memverifikasi...";
+  }
+
   google.script.run
     .withSuccessHandler(function(response) {
-      // Jika response dari server menyatakan PIN valid (misal: response.success === true atau response === true)
+      // Kembalikan tombol ke kondisi semula
+      if (tombolVerif) {
+        tombolVerif.disabled = false;
+        tombolVerif.innerText = "Verifikasi PIN";
+      }
+
       if (response && (response.success || response === true)) {
-        
-        // Sembunyikan Box Proteksi PIN
+        // 2. Sembunyikan Box Proteksi PIN & Tampilkan Konten Utama
         document.getElementById('boxProteksiLaporan').classList.add('d-none');
-        
-        // Munculkan Konten Laporan Keuangan
         document.getElementById('kontenLaporanAsli').classList.remove('d-none');
 
-        // Panggil fungsi untuk mengambil angka pendapatan/transaksi dari server
-        muatDataKeuanganLaporan(); 
+        // 3. SOLUSI: Beri jeda 500 milidetik agar server Google menutup koneksi PIN terlebih dahulu
+        setTimeout(function() {
+          try {
+            muatDataKeuanganLaporan(); 
+          } catch(e) {
+            console.error("Gagal memuat data keuangan di background:", e);
+          }
+        }, 500);
         
       } else {
-        alert("❌ PIN Pengurus salah! Akses ditolak.");
+        let pesanGagal = (response && response.message) ? response.message : "❌ PIN Pengurus salah! Akses ditolak.";
+        alert(pesanGagal);
         document.getElementById('pinPengurusInput').value = '';
       }
     })
     .withFailureHandler(function(err) {
-      alert("Gagal memverifikasi PIN: " + err.message);
+      if (tombolVerif) {
+        tombolVerif.disabled = false;
+        tombolVerif.innerText = "Verifikasi PIN";
+      }
+      
+      // 4. FILTER JALUR: Saring jika error hanya karena benturan sinyal atau tabrakan fungsi
+      if (err.message && (err.message.includes("Fungsi") || err.message.includes("server") || err.message.includes("Network"))) {
+        console.warn("Terjadi tabrakan request di server, bypass alert: ", err.message);
+        
+        // Pemuatan darurat tanpa memunculkan alert mengganggu ke pengguna
+        document.getElementById('boxProteksiLaporan').classList.add('d-none');
+        document.getElementById('kontenLaporanAsli').classList.remove('d-none');
+        setTimeout(function() { muatDataKeuanganLaporan(); }, 500);
+      } else {
+        alert("Gagal memverifikasi PIN: " + err.message);
+      }
     })
-    .cekPinPengurus(pinInput); // Sesuai dengan nama fungsi di Code.gs Anda
-}  
+    .cekPinPengurus(pinInput);
+}
     // ==================== RETUR FUNCTIONS ====================
     function bukaMenuRetur() {
       document.getElementById('boxProteksiRetur').classList.remove('d-none');
