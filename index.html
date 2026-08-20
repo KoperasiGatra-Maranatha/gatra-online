@@ -867,6 +867,28 @@
         .getDaftarBarang();
     }
 
+     function hapusBarang(kodeBarang) {
+    if (!confirm("Apakah Anda yakin ingin menghapus barang ini?")) return;
+
+    // A. Efek Instan: Langsung hilangkan kartu produk dari layar tanpa tunggu server
+    let elemenKartu = document.getElementById('kartu-produk-' + kodeBarang);
+    if (elemenKartu) {
+      elemenKartu.remove(); 
+    }
+
+    // B. Kirim perintah hapus ke Code.gs (Google Sheets)
+    google.script.run
+      .withSuccessHandler(function(res) {
+        if (res.success) {
+          // Opsional: Panggil muatDaftarBarang() jika ingin memastikan data sinkron
+          // muatDaftarBarang(); 
+        } else {
+          alert("⚠️ Gagal menghapus di database: " + res.message);
+          muatDaftarBarang(); // Muat ulang data jika ternyata di server gagal
+        }
+      })
+      .hapusBarangDariSheet(kodeBarang); // Nama fungsi di Code.gs
+  }
     // ==================== PENGURUS FUNCTIONS ====================
     function bukaMenuPengurus() {
       document.getElementById('containerDaftarPengurus').innerHTML = '<div class="text-center text-muted p-3">Memuat data pengurus...</div>';
