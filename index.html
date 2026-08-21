@@ -924,43 +924,53 @@ function bukaMenuKeranjang() {
     }
     
     function tampilkanKatalog(barang) {
-      let html = '';
-      if (!barang || barang.length === 0) {
-        document.getElementById('katalog').innerHTML = '<p class="text-muted text-center w-100 p-3">Tidak ada barang.</p>';
-        return;
-      }
-     
-      barang.forEach(item => {
-        let rawGambar = item.gambar ? item.gambar.toString() : "";
-        let fileId = "";
-        let match = rawGambar.match(/[-\w]{25,}/);
+  let html = '';
+  if (!barang || barang.length === 0) {
+    document.getElementById('katalog').innerHTML = '<p class="text-muted text-center w-100 p-3">Tidak ada barang.</p>';
+    return;
+  }
 
-        if (match && match[0]) {
-          fileId = match[0];
-        }
+  barang.forEach(item => {
+    let rawGambar = item.gambar ? item.gambar.toString() : "";
+    let fileId = "";
+    let match = rawGambar.match(/[-\w]{25,}/);
 
-        let linkGambar = fileId
-          ? "https://drive.google.com/thumbnail?sz=w300&id=" + fileId + "&t=" + new Date().getTime()
-          : "https://via.placeholder.com/200?text=No+Image";
-
-        html += `
-          <div class="mb-2 px-1 col-barang">
-            <div class="card card-barang h-100 shadow-sm border-0">
-              <img src="${linkGambar}" class="card-img-top rounded-3" style="object-fit: cover; height: 110px; width: 100% !important;" onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
-              <div class="card-body p-2 d-flex flex-column justify-content-between">
-                <div>
-                  <h6 class="card-title text-dark fw-bold mb-1" style="font-size: 0.85rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.nama}</h6>
-                  <p class="card-text text-success fw-semibold mb-1" style="font-size: 0.8rem;">Rp ${Number(item.harga).toLocaleString('id-ID')}</p>
-                  <small class="stok-text d-block text-muted mb-2" style="font-size: 0.75rem;">Stok: ${item.stok}</small>
-                </div>
-                <button class="btn btn-sm btn-success w-100 py-1 fw-bold" style="font-size: 0.75rem;" onclick="tambahKeKeranjang('${item.kode}')">➕ Tambah</button>
-              </div>
-            </div>
-          </div>`;
-      });
-      document.getElementById('katalog').innerHTML = html;
+    if (match && match[0]) {
+      fileId = match[0];
     }
 
+    // Menggunakan CDN lh3 dengan resolusi pas (600px)
+    let linkGambar = fileId
+      ? "https://lh3.googleusercontent.com/d/" + fileId
+      : "https://via.placeholder.com/200?text=No+Image";
+
+    html += `
+      <div class="mb-2 px-1 col-barang">
+        <div class="card card-barang h-100 shadow-sm border-0">
+          
+          <!-- PEMBUNGKUS GAMBAR PERSEGI (1:1) PROPORSIONAL -->
+          <div style="position: relative; width: 100%; padding-top: 100%; overflow: hidden; background-color: #ffffff; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+            <img src="${linkGambar}" 
+                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; padding: 6px;" 
+                 class="card-img-top" 
+                 alt="${item.nama}"
+                 onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
+          </div>
+
+          <div class="card-body p-2 d-flex flex-column justify-content-between">
+            <div>
+              <h6 class="card-title text-dark fw-bold mb-1" style="font-size: 0.85rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.nama}</h6>
+              <p class="card-text text-success fw-semibold mb-1" style="font-size: 0.8rem;">Rp ${Number(item.harga).toLocaleString('id-ID')}</p>
+              <small class="stok-text d-block text-muted mb-2" style="font-size: 0.75rem;">Stok: ${item.stok}</small>
+            </div>
+            <button class="btn btn-sm btn-success w-100 py-1 fw-bold" style="font-size: 0.75rem;" onclick="tambahKeKeranjang('${item.kode}')">➕ Tambah</button>
+          </div>
+        </div>
+      </div>`;
+  });
+  
+  document.getElementById('katalog').innerHTML = html;
+}
     // ==================== ANGGOTA FUNCTIONS ====================
     let penundaPencarian;
     function pemicuCekAnggota() {
