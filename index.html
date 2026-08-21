@@ -251,14 +251,14 @@
 
 /* Gambar di dalam wrapper agar tampil utuh tanpa terpotong */
   .card-img-top-wrapper img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* Gambar utuh tanpa terpotong */
-    padding: 6px; /* Jarak aman di dalam kartu */
-   }  
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Memenuhi bingkai penuh (bagian ujung gambar vertikal mungkin terpotong sedikit) */
+  padding: 0; 
+}
   </style>
 
   <link rel="manifest" href="./manifest.json">
