@@ -367,9 +367,7 @@
           🛍️ Keranjang <span id="notifKeranjang" class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill d-none" style="font-size: 10px; padding: 3px 6px;">0</span>
         </button>
       </li>
-
-            <!-- TOMBOL UTAMA 4: PENGURUS (PERBAIKAN BARU) -->
-           <!-- TOMBOL UTAMA 4: PENGURUS (BERSIH & OTOMATIS) -->
+      
       <li class="nav-item">
         <button class="nav-link" id="pengurus-tab" data-bs-toggle="tab" data-bs-target="#tab-pengurus" type="button">👥 Pengurus</button>
       </li>
@@ -937,16 +935,13 @@ function bukaMenuKeranjang() {
         let fileId = "";
         let match = rawGambar.match(/[-\w]{25,}/);
 
-
         if (match && match[0]) {
           fileId = match[0];
         }
 
-
         let linkGambar = fileId
           ? "https://drive.google.com/thumbnail?sz=w300&id=" + fileId + "&t=" + new Date().getTime()
           : "https://via.placeholder.com/200?text=No+Image";
-
 
         html += `
           <div class="mb-2 px-1 col-barang">
@@ -983,18 +978,15 @@ function bukaMenuKeranjang() {
       }, 500);
     }
 
-
     function cekAnggota() {
       let nik = document.getElementById('nikPembeli').value;
       if (!nik) return;
-
 
       if (nik.length < 4) {
         document.getElementById('namaAnggota').innerText = "⚠️ NIK belum lengkap";
         document.getElementById('box-pin').classList.add('d-none');
         return;
       }
-
 
       document.getElementById('namaAnggota').innerText = "Memeriksa NIK...";
      
