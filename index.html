@@ -237,7 +237,29 @@
     .dropdown-item:hover {
       background-color: #f8f9fa !important;
       color: #006A4E !important; 
-    }  </style>
+    }  
+     /* Pembungkus gambar agar persegi 1:1 & responsif di komputer/HP */
+  .card-img-top-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 100%; /* Memaksa bentuk persegi 1:1 */
+    overflow: hidden;
+    background-color: #ffffff;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+   }
+
+/* Gambar di dalam wrapper agar tampil utuh tanpa terpotong */
+  .card-img-top-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Gambar utuh tanpa terpotong */
+    padding: 6px; /* Jarak aman di dalam kartu */
+   }  
+  </style>
 
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#006A4E">
